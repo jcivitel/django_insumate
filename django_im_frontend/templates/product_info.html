@@ -1,18 +1,27 @@
 {% extends "base/base.html" %}
 {% block content %}
-    <div class="container-fluid card shadow-lg col-6">
+    <div class="container-fluid card shadow-lg col-6 my-5">
+        <div class="card-header">
+            <div class="h2">Quick Search</div>
+        </div>
         <div class="card-body">
             <form method="post">
                 {% csrf_token %}
-                {{ quicksearchform }}
+                {% for field in quicksearchform %}
+                    <div class="form-group form-floating m-3">
+                        {{ field }}
+                        {{ field.label_tag }}
+                    </div>
+                {% endfor %}
                 <button type="submit" class="mt-2 btn btn-primary float-end">Search</button>
             </form>
         </div>
     </div>
-    <div class="container-fluid mt-4 col-6">
+    <div class="container-fluid mt-4 col-6 card">
         {% if product_info %}
             <h3>{{ product_info.name }}</h3>
             <p>Kohlenhydrate: {{ product_info.carbs|default:"Keine Angabe" }} g pro 100g</p>
+            <a class="btn btn-primary float-end" href="{% url "calculator" product_info.code %}">Calc</a>
         {% elif product_info == None %}
             <div class="border-danger">
                 <h3 class="text-danger">Nothing Found</h3>
