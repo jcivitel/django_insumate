@@ -39,3 +39,11 @@ class UserProfileForm(forms.ModelForm):
     morning_factor = forms.FloatField(label="Morning factor", min_value=0, max_value=10)
     noon_factor = forms.FloatField(label="Lunch factor", min_value=0, max_value=10)
     evening_factor = forms.FloatField(label="Dinner factor", min_value=0, max_value=10)
+
+
+class CalculatorForm(forms.Form):
+    barcode = forms.CharField(
+        max_length=100,
+        label="Barcode",
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )

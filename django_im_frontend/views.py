@@ -7,8 +7,8 @@ from django.shortcuts import render, redirect
 from django.template import loader
 
 from django_im_backend.models import UserProfile
-from .forms import QuickSearch, UserProfileForm
-from .functions import get_product_info
+from .forms import QuickSearch, UserProfileForm, CalculatorForm
+from .functions import get_product_info, get_current_factor
 
 
 def login_view(request):
@@ -84,5 +84,32 @@ def edit_profile(request):
     else:
         profile_form = UserProfileForm(instance=profile)
         template_opts["profile_form"] = profile_form
+
+    return HttpResponse(template.render(template_opts, request))
+
+
+@login_required
+def calculate(request, barcode=None):
+    template = loader.get_template("calculator.html")
+    template_opts = dict()
+    if barcode is None:
+        calc_form = CalculatorForm()
+        template_opts["calc_form"] = calc_form
+        return HttpResponse(template.render(template_opts, request))
+
+    profile = UserProfile.objects.get(user=request.user)
+
+    time_of_day, current_factor = get_current_factor(profile)
+    cached_result = cache.get(f"product:{barcode}")
+    if cached_result is not None:
+        template_opts["product_info"] = cached_result["carbs"]
+    else:
+        template_opts["product_info"] = get_product_info(barcode)["carbs"]
+        cache.set(
+            f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24
+        )
+
+    template_opts['time_of_day'] = time_of_day
+    template_opts['current_factor'] = current_factor
 
     return HttpResponse(template.render(template_opts, request))

@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+{% block content %}
+    {% if calc_form %}
+        <div class="container-fluid card shadow-lg col-6 my-5">
+            <div class="card-header">
+                <div class="h2">Calculate</div>
+            </div>
+            <div class="card-body">
+                <form action="{% url "calculator" %}">
+                    {% csrf_token %}
+                    {% for field in calc_form %}
+                        <div class="form-group form-floating m-3">
+                            {{ field }}
+                            {{ field.label_tag }}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="mt-2 btn btn-primary float-end">Search</button>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="container-fluid card shadow-lg col-6 my-5">
+            <div class="card-header">
+                <div class="h2">Calc Results</div>
+            </div>
+            <div class="card-body">
+                {{ time_of_day }}
+                {{ current_factor }}
+                {{ product_info }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
