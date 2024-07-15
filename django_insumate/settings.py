@@ -145,7 +145,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "django_insumate" / "static",
+    BASE_DIR / "django_im_frontend" / "static",
 ]
 
 # Default primary key field type

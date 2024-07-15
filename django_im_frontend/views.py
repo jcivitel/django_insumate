@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from .forms import QuickSearch
+from django_im_backend.models import UserProfile
+from .forms import QuickSearch, UserProfileForm
 from .functions import get_product_info
 
 
@@ -50,13 +51,38 @@ def quick_product_search(request):
             cached_result = cache.get(f"product:{barcode}")
             if cached_result is not None:
                 template_opts["product_info"] = cached_result
+                print(f"got cache for {cached_result["name"]}")
             else:
                 template_opts["product_info"] = get_product_info(barcode)
-                cache.set(f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24)
+                cache.set(
+                    f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24
+                )
             template_opts["quicksearchform"] = quicksearchform
     else:
         quicksearchform = QuickSearch()
         template_opts["quicksearchform"] = quicksearchform
         template_opts["product_info"] = ""
+
+    return HttpResponse(template.render(template_opts, request))
+
+
+@login_required
+def edit_profile(request):
+    template = loader.get_template("edit_profile.html")
+    template_opts = dict()
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile(user=request.user)
+
+    if request.method == "POST":
+        profile_form = UserProfileForm(request.POST, instance=profile)
+        if profile_form.is_valid():
+            profile = profile_form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+    else:
+        profile_form = UserProfileForm(instance=profile)
+        template_opts["profile_form"] = profile_form
 
     return HttpResponse(template.render(template_opts, request))
