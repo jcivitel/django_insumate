@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 
@@ -81,6 +81,7 @@ def edit_profile(request):
             profile = profile_form.save(commit=False)
             profile.user = request.user
             profile.save()
+            template_opts["profile_form"] = profile_form
     else:
         profile_form = UserProfileForm(instance=profile)
         template_opts["profile_form"] = profile_form
@@ -92,19 +93,26 @@ def edit_profile(request):
 def calculate(request, barcode=None):
     template = loader.get_template("calculator.html")
     template_opts = dict()
-    if barcode is None:
+    if barcode is None and request.method == "GET":
         calc_form = CalculatorForm()
         template_opts["calc_form"] = calc_form
         return HttpResponse(template.render(template_opts, request))
+
+    if request.method == "POST":
+        calc_form = CalculatorForm(request.POST)
+        if calc_form.is_valid():
+            print(calc_form.cleaned_data)
+            return HttpResponseRedirect(f"/calculator/{calc_form.cleaned_data["barcode"]}")
 
     profile = UserProfile.objects.get(user=request.user)
 
     time_of_day, current_factor = get_current_factor(profile)
     cached_result = cache.get(f"product:{barcode}")
     if cached_result is not None:
-        template_opts["product_info"] = cached_result["carbs"]
+        template_opts["product_info"] = cached_result
+        print(f"got cache for {cached_result["name"]}")
     else:
-        template_opts["product_info"] = get_product_info(barcode)["carbs"]
+        template_opts["product_info"] = get_product_info(barcode)
         cache.set(
             f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24
         )
