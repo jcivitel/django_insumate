@@ -10,4 +10,5 @@ urlpatterns = [
     path("profile/", views.edit_profile, name="profile"),
     path("calculator/", views.calculate, name="calculator"),
     path("calculator/<str:barcode>/", views.calculate, name="calculator"),
+    path("set-meal/", views.set_meal, name="set_meal"),
 ]

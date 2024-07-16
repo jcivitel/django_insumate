@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
-from django_im_backend.models import UserProfile
+from django_im_backend.models import UserProfile, MealEntry
 from .forms import QuickSearch, UserProfileForm, CalculatorForm
 from .functions import get_product_info, get_current_factor
 
@@ -19,7 +19,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, "WELCOME ❤️")
+            messages.success(request, f"WELCOME {user}❤️")
             return redirect("dashboard")
         else:
             messages.error(request, "Invalid username or password")
@@ -29,6 +29,7 @@ def login_view(request):
 @login_required
 def logout_view(request):
     logout(request)
+    messages.success(request, "You have been logged out 🫡")
     return redirect("login")
 
 
@@ -53,7 +54,6 @@ def quick_product_search(request):
             cached_result = cache.get(f"product:{barcode}")
             if cached_result is not None:
                 template_opts["product_info"] = cached_result
-                print(f"got cache for {cached_result["name"]}")
             else:
                 template_opts["product_info"] = get_product_info(barcode)
                 cache.set(
@@ -104,27 +104,33 @@ def calculate(request, barcode=None):
     if request.method == "POST":
         calc_form = CalculatorForm(request.POST)
         if calc_form.is_valid():
-            print(calc_form.cleaned_data)
-            return HttpResponseRedirect(f"/calculator/{calc_form.cleaned_data["barcode"]}")
+            return HttpResponseRedirect(
+                f"/calculator/{calc_form.cleaned_data["barcode"]}"
+            )
 
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
-        messages.warning(request, "Please update your profile first 😊")
+        messages.success(request, "Please update your profile first 😊")
         return HttpResponseRedirect(reverse("profile"))
 
     time_of_day, current_factor = get_current_factor(profile)
     cached_result = cache.get(f"product:{barcode}")
     if cached_result is not None:
         template_opts["product_info"] = cached_result
-        print(f"got cache for {cached_result["name"]}")
     else:
         template_opts["product_info"] = get_product_info(barcode)
-        cache.set(
-            f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24
-        )
+        cache.set(f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24)
 
-    template_opts['time_of_day'] = time_of_day
-    template_opts['current_factor'] = current_factor
+    template_opts["time_of_day"] = time_of_day
+    template_opts["current_factor"] = current_factor
 
     return HttpResponse(template.render(template_opts, request))
+
+
+@login_required
+def set_meal(request):
+    if request.method == "POST":
+        MealEntry.objects.create(user=request.user, KE=request.POST["suggested_ce"])
+        messages.success(request, "Your meal has been set😉")
+    return HttpResponseRedirect(reverse("dashboard"))

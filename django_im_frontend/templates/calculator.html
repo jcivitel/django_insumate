@@ -102,14 +102,12 @@
                             <label for="id_product_carbs">Product Carbs:</label>
                         </div>
                         <div class="h5">Based on this we sugest:</div>
-                        <div class="form-floating col-6 col-sm-4">
-                            <input class="form-control" id="id_suggested_ce" disabled>
+                        <form method="post" class="form-floating col-6 col-sm-4" action="{% url "set_meal" %}">
+                            {% csrf_token %}
+                            <input class="form-control" name="suggested_ce" id="id_suggested_ce" readonly>
                             <label for="id_suggested_ce">Suggested CE:</label>
-                        </div>
-                        <div class="form-floating col-6 col-sm-4"></div>
-                        <div class="col-6 col-sm-4">
-                            <a class="btn btn-primary" href="#">Put on my Meal-list</a>
-                        </div>
+                            <button type="submit" class="btn btn-primary">Put on my Meal-list</button>
+                        </form>
                     </div>
                 </div>
             </div>

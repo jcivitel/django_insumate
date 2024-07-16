@@ -11,7 +11,11 @@ def get_product_info(barcode):
         if data["status"] == 1:
             product = data["product"]
             carbs = product.get("nutriments", {}).get("carbohydrates_100g")
-            return {"code": product.get("code"), "name": product.get("product_name"), "carbs": carbs}
+            return {
+                "code": product.get("code"),
+                "name": product.get("product_name"),
+                "carbs": carbs,
+            }
     return None
 
 
