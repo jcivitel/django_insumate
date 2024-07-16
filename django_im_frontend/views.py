@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
+from django.urls import reverse
 
 from django_im_backend.models import UserProfile
 from .forms import QuickSearch, UserProfileForm, CalculatorForm
@@ -18,6 +19,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            messages.success(request, "WELCOME ❤️")
             return redirect("dashboard")
         else:
             messages.error(request, "Invalid username or password")
@@ -81,6 +83,7 @@ def edit_profile(request):
             profile = profile_form.save(commit=False)
             profile.user = request.user
             profile.save()
+            messages.success(request, "Your profile has been updated 😎")
             template_opts["profile_form"] = profile_form
     else:
         profile_form = UserProfileForm(instance=profile)
@@ -104,7 +107,11 @@ def calculate(request, barcode=None):
             print(calc_form.cleaned_data)
             return HttpResponseRedirect(f"/calculator/{calc_form.cleaned_data["barcode"]}")
 
-    profile = UserProfile.objects.get(user=request.user)
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        messages.warning(request, "Please update your profile first 😊")
+        return HttpResponseRedirect(reverse("profile"))
 
     time_of_day, current_factor = get_current_factor(profile)
     cached_result = cache.get(f"product:{barcode}")
