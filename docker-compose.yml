@@ -1,0 +1,10 @@
+services:
+  insumate:
+    image: jcivitell/insumate
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      tags:
+      - "jcivitell/insumate:${CIRCLE_BRANCH:-nobranch}"
+      - "jcivitell/insumate:${CIRCLE_TAG:-notag}"
+      
