@@ -118,10 +118,13 @@ REST_FRAMEWORK = {
     ],
 }
 
+REDIS_HOST = config("REDIS_HOST", default="127.0.0.1", cast=str)
+REDIS_PORT = config("REDIS_PORT", default="6379", cast=str)
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
