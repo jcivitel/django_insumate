@@ -1,4 +1,54 @@
 {% extends "base/base.html" %}
+{% load static %}
+
+{% block customjs %}
+    <script src="{% static 'jquery/jquery-3.7.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            // Funktion zum Aktualisieren beider Inputs
+            function updateInputs(value) {
+                let factor = parseFloat($('#id_factor').val());
+                let productCarbs = parseFloat($('#id_product_carbs').val());
+                let result = ((((productCarbs / 100) * value) / 10) * factor);
+
+                $('#id_range').val(value);
+                $('#id_number').val(value);
+                $('#id_suggested_ce').val(result.toFixed(2));
+            }
+
+            // Debounce-Funktion, um die Überprüfung zu verzögern
+            function debounce(func, delay) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), delay);
+                };
+            }
+
+            // Funktion zur Überprüfung des Wertes
+            function checkValue() {
+                let value = parseFloat($('#id_number').val());
+                if (value < 10) {
+                    updateInputs(10);
+                } else if (value > 1000) {
+                    updateInputs(1000);
+                }
+            }
+
+            // Debounced Version der checkValue Funktion
+            const debouncedCheckValue = debounce(checkValue, 2000);
+
+            // Event-Listener für die Inputs
+            $('#id_range, #id_number').on('input', function () {
+                updateInputs($(this).val());
+                debouncedCheckValue();
+            });
+
+            // Initialisieren Sie die Inputs mit einem Startwert
+            updateInputs(100);
+        });
+    </script>
+{% endblock %}
 {% block content %}
     {% if calc_form %}
         <div class="container-fluid card shadow-lg col-6 my-5">
@@ -6,7 +56,7 @@
                 <div class="h2">Calculate</div>
             </div>
             <div class="card-body">
-                <form action="{% url "calculator" %}">
+                <form action="{% url "calculator" %}" method="post">
                     {% csrf_token %}
                     {% for field in calc_form %}
                         <div class="form-group form-floating m-3">
@@ -19,14 +69,49 @@
             </div>
         </div>
     {% else %}
-        <div class="container-fluid card shadow-lg col-6 my-5">
+        <div class="container-fluid card shadow-lg col-12 col-md-6 my-5">
             <div class="card-header">
-                <div class="h2">Calc Results</div>
+                <div class="h2">Calc Results for {{ product_info.name }}</div>
             </div>
             <div class="card-body">
-                {{ time_of_day }}
-                {{ current_factor }}
-                {{ product_info }}
+                <div class="row g-2">
+                    <div class="col-md">
+                        <div class="input-group">
+                            <input type="range" class="form-range col-auto" step="0.5" min="10" max="1000"
+                                   id="id_range">
+                        </div>
+                        <div class="input-group col-3">
+                            <input type="number" class="form-control" step="0.5" min="10" max="1000" id="id_number">
+                            <span class="input-group-text">g</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="card-body shadow-lg">
+                    <div class="row g-3">
+                        <div class="form-floating col-6 col-sm-4">
+                            <input class="form-control" id="id_factor_base" disabled value="{{ time_of_day }}">
+                            <label for="id_factor_base">Factorname:</label>
+                        </div>
+                        <div class="form-floating col-6 col-sm-4">
+                            <input class="form-control" id="id_factor" disabled value="{{ current_factor }}">
+                            <label for="id_factor">Factor:</label>
+                        </div>
+                        <div class="form-floating col-6 col-sm-4">
+                            <input class="form-control" id="id_product_carbs" disabled value="{{ product_info.carbs }}">
+                            <label for="id_product_carbs">Product Carbs:</label>
+                        </div>
+                        <div class="h5">Based on this we sugest:</div>
+                        <div class="form-floating col-6 col-sm-4">
+                            <input class="form-control" id="id_suggested_ce" disabled>
+                            <label for="id_suggested_ce">Suggested CE:</label>
+                        </div>
+                        <div class="form-floating col-6 col-sm-4"></div>
+                        <div class="col-6 col-sm-4">
+                            <a class="btn btn-primary" href="#">Put on my Meal-list</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     {% endif %}
