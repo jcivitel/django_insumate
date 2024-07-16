@@ -1,0 +1,44 @@
+services:
+  insumate:
+    image: jcivitell/insumate:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      MAIN_DATABASE_HOST: insumate_mariadb
+      MAIN_DATABASE_NAME: insumate
+      MAIN_DATABASE_USER: insumate
+      MAIN_DATABASE_PASSWD: insumatepw
+      MAIN_DATABASE_ENGINE: django.db.backends.mysql
+      REDIS_HOST: insumate_redis
+    depends_on:
+      insumate_mariadb:
+        condition: service_healthy
+      insumate_redis:
+        condition: service_started
+    ports:
+      - "8000:8000"
+      
+  insumate_mariadb:
+    container_name: insumate_mariadb
+    image: mariadb:latest
+    restart: always    
+    environment:
+      MARIADB_USER: insumate
+      MARIADB_PASSWORD: insumatepw
+      MARIADB_DATABASE: insumate
+      MARIADB_ROOT_PASSWORD: megasec
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - ./mysql:/var/lib/mysql
+      
+  insumate_redis:
+    container_name: insumate_redis
+    image: redis:latest
+    restart: always
