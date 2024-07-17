@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block customjs %}
-    <script src="{% static 'jquery/jquery-3.7.1.min.js' %}"></script>
     <script>
         $(document).ready(function () {
             // Funktion zum Aktualisieren beider Inputs
@@ -13,6 +12,7 @@
 
                 $('#id_range').val(value);
                 $('#id_number').val(value);
+                $('#id_carbs_quantity').val((((productCarbs / 100) * value) / 10).toFixed(2))
                 $('#id_suggested_ce').val(result.toFixed(2));
             }
 
@@ -90,22 +90,27 @@
                 <div class="card-body shadow-lg">
                     <div class="row g-3">
                         <div class="form-floating col-6 col-sm-4">
-                            <input class="form-control" id="id_factor_base" disabled value="{{ time_of_day }}">
+                            <input class="form-control" id="id_factor_base" readonly value="{{ time_of_day }}">
                             <label for="id_factor_base">Factorname:</label>
                         </div>
                         <div class="form-floating col-6 col-sm-4">
-                            <input class="form-control" id="id_factor" disabled value="{{ current_factor }}">
+                            <input class="form-control" id="id_factor" readonly value="{{ current_factor }}">
                             <label for="id_factor">Factor:</label>
                         </div>
                         <div class="form-floating col-6 col-sm-4">
-                            <input class="form-control" id="id_product_carbs" disabled value="{{ product_info.carbs }}">
+                            <input class="form-control" id="id_product_carbs" readonly value="{{ product_info.carbs }}">
                             <label for="id_product_carbs">Product Carbs:</label>
                         </div>
                         <div class="h5">Based on this we sugest:</div>
+                        <div class="form-floating col-6 col-sm-4">
+                            <input class="form-control" id="id_carbs_quantity" readonly>
+                            <label for="id_carbs_quantity">CE / quantity:</label>
+                        </div>
                         <form method="post" class="form-floating col-6 col-sm-4" action="{% url "set_meal" %}">
                             {% csrf_token %}
+                            <input class="hidden" name="barcode" value="{{ product_info.code }}" hidden>
                             <input class="form-control" name="suggested_ce" id="id_suggested_ce" readonly>
-                            <label for="id_suggested_ce">Suggested CE:</label>
+                            <label for="id_suggested_ce">Suggested ICE:</label>
                             <button type="submit" class="btn btn-primary">Put on my Meal-list</button>
                         </form>
                     </div>
