@@ -1,9 +1,13 @@
 from datetime import datetime
 
 import requests
+from django.core.cache import cache
 
 
 def get_product_info(barcode):
+    cached_result = cache.get(f"product:{barcode}")
+    if cached_result is not None:
+        return cached_result
     url = f"https://world.openfoodfacts.org/api/v0/product/{barcode}.json"
     response = requests.get(url)
     if response.status_code == 200:
@@ -11,11 +15,13 @@ def get_product_info(barcode):
         if data["status"] == 1:
             product = data["product"]
             carbs = product.get("nutriments", {}).get("carbohydrates_100g")
-            return {
+            product_info = {
                 "code": product.get("code"),
                 "name": product.get("product_name"),
                 "carbs": carbs,
             }
+            cache.set(f"product:{barcode}", product_info, 60 * 60 * 24)
+            return product_info
     return None
 
 

@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
+from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
@@ -43,10 +43,11 @@ def dashboard(request):
     thirty_minutes_ago = timezone.now() - timedelta(minutes=30)
 
     recent_entries = MealEntry.objects.filter(
-        user=request.user,
-        timestamp__gte=thirty_minutes_ago
-    ).order_by('-timestamp')
+        user=request.user, timestamp__gte=thirty_minutes_ago
+    ).order_by("-timestamp")
+
     template_opts["recent_entries"] = recent_entries
+    template_opts["sum"] = recent_entries.aggregate(Sum("KE"))["KE__sum"] or 0
 
     return HttpResponse(template.render(template_opts, request))
 
@@ -60,14 +61,7 @@ def quick_product_search(request):
         quicksearchform = QuickSearch(request.POST)
         if quicksearchform.is_valid():
             barcode = quicksearchform.cleaned_data["barcode"]
-            cached_result = cache.get(f"product:{barcode}")
-            if cached_result is not None:
-                template_opts["product_info"] = cached_result
-            else:
-                template_opts["product_info"] = get_product_info(barcode)
-                cache.set(
-                    f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24
-                )
+            template_opts["product_info"] = get_product_info(barcode)
             template_opts["quicksearchform"] = quicksearchform
     else:
         quicksearchform = QuickSearch()
@@ -124,12 +118,7 @@ def calculate(request, barcode=None):
         return HttpResponseRedirect(reverse("profile"))
 
     time_of_day, current_factor = get_current_factor(profile)
-    cached_result = cache.get(f"product:{barcode}")
-    if cached_result is not None:
-        template_opts["product_info"] = cached_result
-    else:
-        template_opts["product_info"] = get_product_info(barcode)
-        cache.set(f"product:{barcode}", template_opts["product_info"], 60 * 60 * 24)
+    template_opts["product_info"] = get_product_info(barcode)
 
     template_opts["time_of_day"] = time_of_day
     template_opts["current_factor"] = current_factor
@@ -140,7 +129,12 @@ def calculate(request, barcode=None):
 @login_required
 def set_meal(request):
     if request.method == "POST":
-        MealEntry.objects.create(user=request.user, KE=request.POST["suggested_ce"])
+        MealEntry.objects.create(
+            user=request.user,
+            KE=request.POST["suggested_ce"],
+            barcode=request.POST["barcode"],
+            name=get_product_info(request.POST["barcode"])["name"],
+        )
         messages.success(request, "Your meal has been set😉")
     return HttpResponseRedirect(reverse("dashboard"))
 

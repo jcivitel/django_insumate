@@ -14,19 +14,29 @@
                 </div>
             </div>
             <div class="card shadow-lg m-1 col-11 col-md-5">
-                <div class="card-header">Meal-List</div>
+                <div class="card-header">
+                    <div>Meal-List:</div>
+                    <small class="small">just the last 30 Minutes</small>
+                </div>
                 <div class="card-body">
                     <ul class="list-group">
                         {% for entry in recent_entries %}
                             <li class="list-group-item">
-                                {{ entry.KE }} KE - {{ entry.timestamp|date:"H:i" }}
-                                <a href="{% url "delete-entry" entry.id %}" methods="post" class="float-end link-body-emphasis"><i
+                                {{ entry.timestamp|date:"H:i" }} - {{ entry.name }} - {{ entry.KE }} ICE
+                                <a href="{% url "delete-entry" entry.id %}" methods="post"
+                                   class="float-end link-body-emphasis"><i
                                         class="bi-trash"></i></a>
                             </li>
                         {% empty %}
                             <li class="list-group-item">No entries in the last 30 Minutes 🙂</li>
                         {% endfor %}
                     </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="form-floating">
+                        <input class="form-control" id="id_sum" value="{{ sum }}" readonly>
+                        <label for="id_sum">Sum</label>
+                    </div>
                 </div>
             </div>
         </div>
