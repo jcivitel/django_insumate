@@ -17,8 +17,8 @@
             </form>
         </div>
     </div>
-    <div class="container-fluid mt-4 col-12 col-sm-6 card">
-        {% if product_info %}
+    {% if product_info %}
+        <div class="container-fluid mt-4 col-12 col-sm-6 card">
             <div class="row">
                 <h3>{{ product_info.name }}</h3>
                 <p>Kohlenhydrate: {{ product_info.carbs|default:"Keine Angabe" }} g pro 100g</p>
@@ -27,10 +27,6 @@
                     <a class="btn btn-primary float-end m-3" href="{% url "calculator" product_info.code %}">Calc</a>
                 </div>
             </div>
-        {% elif product_info == None %}
-            <div class="border-danger">
-                <h3 class="text-danger">Nothing Found</h3>
-            </div>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 {% endblock %}
