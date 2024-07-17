@@ -23,7 +23,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN pip install --no-cache-dir -r /opt/insumate/requirements.txt
 
-FROM install as run
+FROM install
 
 EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "--noreload", "0.0.0.0:8000"]
