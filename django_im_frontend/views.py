@@ -10,7 +10,7 @@ from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
 
-from django_im_backend.models import UserProfile, MealEntry
+from django_im_backend.models import UserProfile, MealEntry, RecentSearch
 from .forms import QuickSearch, UserProfileForm, CalculatorForm
 from .functions import get_product_info, get_current_factor
 
@@ -49,6 +49,10 @@ def dashboard(request):
     template_opts["recent_entries"] = recent_entries
     template_opts["sum"] = recent_entries.aggregate(Sum("KE"))["KE__sum"] or 0
 
+    template_opts["recent_searches"] = RecentSearch.objects.filter(user=request.user)[
+        :5
+    ]
+
     return HttpResponse(template.render(template_opts, request))
 
 
@@ -63,10 +67,11 @@ def quick_product_search(request):
             barcode = quicksearchform.cleaned_data["barcode"]
             template_opts["product_info"] = get_product_info(barcode)
             template_opts["quicksearchform"] = quicksearchform
+            if template_opts["product_info"] is None:
+                messages.error(request, "Invalid barcode 😯")
     else:
         quicksearchform = QuickSearch()
         template_opts["quicksearchform"] = quicksearchform
-        template_opts["product_info"] = ""
 
     return HttpResponse(template.render(template_opts, request))
 
@@ -107,9 +112,13 @@ def calculate(request, barcode=None):
     if request.method == "POST":
         calc_form = CalculatorForm(request.POST)
         if calc_form.is_valid():
-            return HttpResponseRedirect(
-                f"/calculator/{calc_form.cleaned_data["barcode"]}"
-            )
+            if get_product_info(barcode) is not None:
+                return HttpResponseRedirect(
+                    f"/calculator/{calc_form.cleaned_data["barcode"]}"
+                )
+            else:
+                messages.error(request, "Invalid barcode 😯")
+                return HttpResponseRedirect(reverse("calculator"))
 
     try:
         profile = UserProfile.objects.get(user=request.user)
@@ -122,6 +131,9 @@ def calculate(request, barcode=None):
 
     template_opts["time_of_day"] = time_of_day
     template_opts["current_factor"] = current_factor
+    RecentSearch.add_search(
+        request.user, barcode, template_opts["product_info"]["name"]
+    )
 
     return HttpResponse(template.render(template_opts, request))
 

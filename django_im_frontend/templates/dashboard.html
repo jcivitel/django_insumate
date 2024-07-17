@@ -1,22 +1,43 @@
 {% extends "base/base.html" %}
-{% now "H" as current_time %}
 {% block content %}
+    {% now "H" as current_time %}
     <div>
-        <h1>Good {% if current_time > 12 and current_time < 17 %}afternoon{% elif current_time > 17 %}eveing{% else %}
-            morning{% endif %} {{ user }}</h1>
+        <h1>Good
+            {% if current_time|add:0 >= 17 %}
+                evening
+            {% elif current_time|add:0 >= 12 %}
+                afternoon
+            {% else %}
+                morning
+            {% endif %}
+            {{ user }}
+        </h1>
     </div>
     <div class="container">
         <div class="row">
             <div class="card shadow-lg m-1 col-11 col-md-5">
-                <div class="card-header">Last searches</div>
+                <div class="card-header mt-2">
+                    <div>Last searches:</div>
+                    <small class="small text-warning-emphasis">just the last 5 searches</small>
+                </div>
                 <div class="card-body">
-
+                    <ul class="list-group">
+                        {% for entry in recent_searches %}
+                            <li class="list-group-item">
+                                <a href="{% url "calculator" entry.barcode %}" class="link-body-emphasis">
+                                    {{ entry.timestamp|date:"H:i" }} - {{ entry.name }}
+                                </a>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">Your search list is empty 🥲</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
             <div class="card shadow-lg m-1 col-11 col-md-5">
-                <div class="card-header">
+                <div class="card-header mt-2">
                     <div>Meal-List:</div>
-                    <small class="small">just the last 30 Minutes</small>
+                    <small class="small text-warning-emphasis">just the last 30 Minutes</small>
                 </div>
                 <div class="card-body">
                     <ul class="list-group">
