@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -6,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
+from django.utils import timezone
 
 from django_im_backend.models import UserProfile, MealEntry
 from .forms import QuickSearch, UserProfileForm, CalculatorForm
@@ -36,8 +39,14 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     template = loader.get_template("dashboard.html")
-
     template_opts = dict()
+    thirty_minutes_ago = timezone.now() - timedelta(minutes=30)
+
+    recent_entries = MealEntry.objects.filter(
+        user=request.user,
+        timestamp__gte=thirty_minutes_ago
+    ).order_by('-timestamp')
+    template_opts["recent_entries"] = recent_entries
 
     return HttpResponse(template.render(template_opts, request))
 
@@ -133,4 +142,11 @@ def set_meal(request):
     if request.method == "POST":
         MealEntry.objects.create(user=request.user, KE=request.POST["suggested_ce"])
         messages.success(request, "Your meal has been set😉")
+    return HttpResponseRedirect(reverse("dashboard"))
+
+
+@login_required
+def delete_entry(request, entry_id):
+    MealEntry.objects.get(id=entry_id).delete()
+    messages.success(request, "Your entry has been deleted😌")
     return HttpResponseRedirect(reverse("dashboard"))

@@ -11,4 +11,5 @@ urlpatterns = [
     path("calculator/", views.calculate, name="calculator"),
     path("calculator/<str:barcode>/", views.calculate, name="calculator"),
     path("set-meal/", views.set_meal, name="set_meal"),
+    path("delete-entry/<int:entry_id>", views.delete_entry, name="delete-entry"),
 ]
