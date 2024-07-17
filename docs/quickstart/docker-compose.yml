@@ -2,9 +2,6 @@ services:
   insumate:
     image: jcivitell/insumate:latest
     restart: always
-    build:
-      context: .
-      dockerfile: ./Dockerfile
     environment:
       MAIN_DATABASE_HOST: insumate_mariadb
       MAIN_DATABASE_NAME: insumate
@@ -19,11 +16,11 @@ services:
         condition: service_started
     ports:
       - "8000:8000"
-      
+
   insumate_mariadb:
     container_name: insumate_mariadb
     image: mariadb:latest
-    restart: always    
+    restart: always
     environment:
       MARIADB_USER: insumate
       MARIADB_PASSWORD: insumatepw
@@ -37,7 +34,7 @@ services:
       retries: 3
     volumes:
       - ./mysql:/var/lib/mysql
-      
+
   insumate_redis:
     container_name: insumate_redis
     image: redis:latest
