@@ -7,8 +7,9 @@ workflows:
             - dockerhub
           filters:
             tags:
-              only: 
-                - /^v.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - dependabot:
           filters:
             branches:
