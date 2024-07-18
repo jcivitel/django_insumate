@@ -112,7 +112,7 @@ def calculate(request, barcode=None):
     if request.method == "POST":
         calc_form = CalculatorForm(request.POST)
         if calc_form.is_valid():
-            if get_product_info(barcode) is not None:
+            if get_product_info(calc_form.cleaned_data["barcode"]) is not None:
                 return HttpResponseRedirect(
                     f"/calculator/{calc_form.cleaned_data["barcode"]}"
                 )

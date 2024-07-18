@@ -12,7 +12,7 @@
 
                 $('#id_range').val(value);
                 $('#id_number').val(value);
-                $('#id_carbs_quantity').val((((productCarbs / 100) * value) / 10).toFixed(2))
+                $('#id_carbs_quantity').val((((productCarbs / 100) * value) / 10).toFixed(2));
                 $('#id_suggested_ce').val(result.toFixed(2));
             }
 
@@ -106,15 +106,22 @@
                             <input class="form-control" id="id_carbs_quantity" readonly>
                             <label for="id_carbs_quantity">CE / quantity:</label>
                         </div>
-                        <form method="post" class="form-floating col-6 col-sm-4" action="{% url "set_meal" %}">
+                        <form method="post" class="form-floating col-12 col-sm-8 row-cols-2" action="{% url "set_meal" %}">
                             {% csrf_token %}
-                            <input class="hidden" name="barcode" value="{{ product_info.code }}" hidden>
-                            <input class="form-control" name="suggested_ce" id="id_suggested_ce" readonly>
+                            <input class="form-control col" name="suggested_ce" id="id_suggested_ce" readonly>
                             <label for="id_suggested_ce">Suggested ICE:</label>
-                            <button type="submit" class="btn btn-primary">Put on my Meal-list</button>
+                            <button type="submit" class="btn btn-primary mt-2 float-end">Put on my Meal-list</button>
+                            <input class="hidden" name="barcode" value="{{ product_info.code }}" hidden>
                         </form>
                     </div>
                 </div>
+            </div>
+            <div class="card-footer my-3">
+                <small class="text-warning-emphasis">Please note that this information is for guidance only and we
+                    cannot give medical advice.
+
+                    Discuss everything else with your diabetologist
+                </small>
             </div>
         </div>
     {% endif %}
