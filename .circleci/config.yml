@@ -9,7 +9,7 @@ workflows:
             tags:
               only: /^v.*/
             branches:
-              ignore: /dev*/ /dependabot*/
+              ignore: /^dev*/ /^dependabot*/
 jobs:
   build:
     working_directory: ~/app
