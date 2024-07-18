@@ -51,7 +51,7 @@ This application aims to simplify the daily task of managing diabetes by providi
 - MariaDB 11.4.x
 
 ## Installation
-[!TIP]
+>[!TIP]
 > You can use the predefined [docker compose](docs/quickstart)
 
 1. Clone the repository:
