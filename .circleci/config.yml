@@ -7,11 +7,13 @@ workflows:
             - dockerhub
           filters:
             tags:
-              only: /^v.*/
+              only: 
+                - /^v.*/
       - dependabot:
           filters:
             branches:
-              only: /^dependabot.*/
+              only: 
+                - /dependabot.*/
 jobs:
   build:
     working_directory: ~/app
