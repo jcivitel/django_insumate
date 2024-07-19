@@ -89,4 +89,4 @@ Contributions are welcome! Please create an issue or pull request for suggestion
 [BSD 3-Clause License](LICENSE)
 
 # Contributors
-[![Contributors Display](https://badges.pufler.dev/contributors/jcivitel/django_connect_store?size=50&padding=5&bots=false)](https://github.com/jcivitel/django_connect_store/graphs/contributors)
+[![Contributors Display](https://badges.pufler.dev/contributors/jcivitel/django_insumate?size=50&padding=5&bots=false)](https://github.com/jcivitel/django_insumate/graphs/contributors)
