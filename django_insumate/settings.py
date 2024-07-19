@@ -12,12 +12,16 @@ PROJECT_NAME = os.path.basename(PROJECT_ROOT)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-SECRET_KEY = config("SECRET_KEY", cast=str)
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-tlic@!^@d_+jmo7=n&^&y1n1*w9i=00b+u$r!lzos%jdkuk&&u",
+    cast=str,
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="[*]", cast=Csv())
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
@@ -39,6 +43,9 @@ for name in os.listdir(PROJECT_ROOT + "/.."):
         INSTALLED_APPS.append(name)
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "x_forwarded_for.middleware.XForwardedForMiddleware",
+    "django.middleware.gzip.GZipMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",

@@ -1,8 +1,11 @@
 services:
   insumate:
+    container_name: insumate
     image: jcivitell/insumate:latest
     restart: always
     environment:
+      SECRET_KEY: django-insecure-tlic@!^@d_+jmo7=n&^&y1n1*w9i=00b+u$r!lzos%jdkuk&&u
+      ALLOWED_HOSTS: '*'
       MAIN_DATABASE_HOST: insumate_mariadb
       MAIN_DATABASE_NAME: insumate
       MAIN_DATABASE_USER: insumate
@@ -14,8 +17,6 @@ services:
         condition: service_healthy
       insumate_redis:
         condition: service_started
-    ports:
-      - "8000:8000"
 
   insumate_mariadb:
     container_name: insumate_mariadb
@@ -27,7 +28,7 @@ services:
       MARIADB_DATABASE: insumate
       MARIADB_ROOT_PASSWORD: megasec
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 10s
       interval: 10s
       timeout: 5s
@@ -39,3 +40,13 @@ services:
     container_name: insumate_redis
     image: redis:latest
     restart: always
+
+  nginx:
+    container_name: insumate_nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - insumate
+    ports:
+      - "80:80"
