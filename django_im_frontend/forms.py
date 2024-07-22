@@ -37,13 +37,13 @@ class UserProfileForm(forms.ModelForm):
         max_value=500,
     )
     morning_factor = forms.FloatField(
-        label="Morning factor", min_value=0, max_value=5, step_size=0.5
+        label="Morning factor", min_value=0, max_value=5, step_size=0.1
     )
     noon_factor = forms.FloatField(
-        label="Lunch factor", min_value=0, max_value=5, step_size=0.5
+        label="Lunch factor", min_value=0, max_value=5, step_size=0.1
     )
     evening_factor = forms.FloatField(
-        label="Dinner factor", min_value=0, max_value=5, step_size=0.5
+        label="Dinner factor", min_value=0, max_value=5, step_size=0.1
     )
 
 
