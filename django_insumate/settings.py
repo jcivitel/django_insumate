@@ -21,6 +21,9 @@ SECRET_KEY = config(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="[]", cast=Csv())
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="[]", cast=Csv())
+
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="[*]", cast=Csv())
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -35,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "corsheaders",
 ]
 
 # Dynamic loading of modules
