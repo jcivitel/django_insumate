@@ -1,4 +1,5 @@
-from datetime import timedelta
+import json
+from datetime import timedelta, datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -156,3 +157,38 @@ def delete_entry(request, entry_id):
     MealEntry.objects.get(id=entry_id).delete()
     messages.success(request, "Your entry has been deleted😌")
     return HttpResponseRedirect(reverse("dashboard"))
+
+
+@login_required
+def statistics_view(request):
+    template = loader.get_template("stats.html")
+    template_opts = dict()
+
+    today = timezone.now().date()
+
+    # Startzeit auf Mitternacht setzen
+    start_of_day = datetime.combine(today, datetime.min.time())
+    start_of_day = timezone.make_aware(start_of_day)
+
+    # Zeitabstände von 30 Minuten erstellen
+    time_intervals = [
+        (
+            start_of_day + timedelta(minutes=30 * i),
+            start_of_day + timedelta(minutes=30 * (i + 1)),
+        )
+        for i in range(48)  # 48 30-Minuten-Intervalle in einem Tag
+    ]
+
+    # KEs für jedes Intervall summieren
+    ke_data = []
+    for start, end in time_intervals:
+        sum_ke = (
+            MealEntry.objects.filter(
+                user=request.user, timestamp__range=(start, end)
+            ).aggregate(Sum("KE"))["KE__sum"]
+            or 0
+        )
+        ke_data.append({"time": start.strftime("%H:%M"), "ke": round(sum_ke, 2)})
+    template_opts["chart_data"] = json.dumps(ke_data)
+
+    return HttpResponse(template.render(template_opts, request))
