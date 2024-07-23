@@ -57,25 +57,6 @@ def dashboard(request):
     return HttpResponse(template.render(template_opts, request))
 
 
-@login_required
-def quick_product_search(request):
-    template = loader.get_template("product_info.html")
-    template_opts = dict()
-
-    if request.method == "POST":
-        quicksearchform = QuickSearch(request.POST)
-        if quicksearchform.is_valid():
-            barcode = quicksearchform.cleaned_data["barcode"]
-            template_opts["product_info"] = get_product_info(barcode)
-            template_opts["quicksearchform"] = quicksearchform
-            if template_opts["product_info"] is None:
-                messages.error(request, "Invalid barcode 😯")
-    else:
-        quicksearchform = QuickSearch()
-        template_opts["quicksearchform"] = quicksearchform
-
-    return HttpResponse(template.render(template_opts, request))
-
 
 @login_required
 def edit_profile(request):
