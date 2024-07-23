@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from decouple import Csv
@@ -20,9 +21,6 @@ SECRET_KEY = config(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
-
-CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="[]", cast=Csv())
-CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="[]", cast=Csv())
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="[*]", cast=Csv())
 CORS_ORIGIN_ALLOW_ALL = True
@@ -58,7 +56,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_auto_logout.middleware.auto_logout",
 ]
+
+AUTO_LOGOUT = {
+    'IDLE_TIME': timedelta(minutes=30),
+    'MESSAGE': 'Your session has expired. Please log in again.',
+    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+}
 
 ROOT_URLCONF = "django_insumate.urls"
 
@@ -75,6 +80,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'django_auto_logout.context_processors.auto_logout_client',
             ],
         },
     },
