@@ -3,6 +3,7 @@
 
 {% block customjs %}
     <script>
+        let lastScanTime = 0;
         $(document).ready(function () {
             // Funktion zum Aktualisieren beider Inputs
             function updateInputs(value) {
@@ -51,6 +52,60 @@
             // Initialisieren Sie die Inputs mit einem Startwert
             updateInputs(100);
         });
+
+        function opencam() {
+            const video = document.createElement('video');
+
+            navigator.mediaDevices.getUserMedia({video: {facingMode: "environment"}})
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.setAttribute("playsinline", true);
+                    video.play();
+                    requestAnimationFrame(() => scan(video));
+                })
+                .catch(function (err) {
+                    console.log("Kamerazugriff nicht möglich: ", err);
+                });
+
+            function scan(video) {
+                const currentTime = Date.now();
+                if (currentTime - lastScanTime < 250) {
+                    requestAnimationFrame(() => scan(video));
+                    return;
+                }
+
+                lastScanTime = currentTime;
+
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const image = canvas.toDataURL('image/jpeg');
+
+                fetch('{% url "barcode_scanner" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: 'image=' + encodeURIComponent(image)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('id_barcode').value = data.barcode;
+                            video.srcObject.getTracks().forEach(track => track.stop());
+                        } else {
+                            requestAnimationFrame(() => scan(video));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fehler beim Scannen:', error);
+                        requestAnimationFrame(() => scan(video));
+                    });
+            }
+        }
     </script>
 {% endblock %}
 {% block content %}
@@ -62,13 +117,19 @@
             <div class="card-body">
                 <form action="{% url "calculator" %}" method="post">
                     {% csrf_token %}
-                    {% for field in calc_form %}
-                        <div class="form-group form-floating m-3">
-                            {{ field }}
-                            {{ field.label_tag }}
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="form-floating">
+                                {{ calc_form.barcode }}
+                                {{ calc_form.barcode.label_tag }}
+                            </div>
+                            <button type="button" class="input-group-button btn btn-outline-primary border-1"
+                                    onclick="opencam()">
+                                <i class="bi-upc-scan"></i>
+                            </button>
                         </div>
-                    {% endfor %}
-                    <button type="submit" class="mt-2 btn btn-primary float-end">Search</button>
+                        <button type="submit" class="mt-2 btn btn-primary float-end">Search</button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -12,4 +12,5 @@ urlpatterns = [
     path("set-meal/", views.set_meal, name="set_meal"),
     path("delete-entry/<int:entry_id>", views.delete_entry, name="delete-entry"),
     path("statistics/", views.statistics_view, name="statistics"),
+    path("barcode-scanner/", views.barcode_scanner, name="barcode_scanner"),
 ]

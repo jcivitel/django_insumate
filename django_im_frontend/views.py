@@ -1,15 +1,21 @@
+import base64
+import io
 import json
 from datetime import timedelta, datetime
 
+from PIL import Image
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.http import require_POST
+from pyzbar.pyzbar import decode
 
 from django_im_backend.models import UserProfile, MealEntry, RecentSearch
 from .forms import UserProfileForm, CalculatorForm
@@ -172,3 +178,30 @@ def statistics_view(request):
     template_opts["chart_data"] = json.dumps(ke_data)
 
     return HttpResponse(template.render(template_opts, request))
+
+
+@require_POST
+def barcode_scanner(request):
+    try:
+        # Empfange das Bild vom Frontend
+        image_data = request.POST.get("image")
+        if not image_data:
+            return JsonResponse({"success": False, "message": "Kein Bild empfangen"})
+
+        image_data = image_data.split(",")[1]
+        image_data = base64.b64decode(image_data)
+
+        # Konvertiere die Daten in ein Bild
+        image = Image.open(io.BytesIO(image_data))
+
+        # Dekodiere den Barcode
+        decoded_objects = decode(image)
+
+        if decoded_objects:
+            barcode_data = decoded_objects[0].data.decode("utf-8")
+            return JsonResponse({"success": True, "barcode": barcode_data})
+        else:
+            return JsonResponse({"success": False, "message": "Kein Barcode gefunden"})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)})
