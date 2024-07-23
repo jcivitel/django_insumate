@@ -3,14 +3,6 @@ from django import forms
 from django_im_backend.models import UserProfile
 
 
-class QuickSearch(forms.Form):
-    barcode = forms.CharField(
-        max_length=100,
-        label="Barcode",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
-    )
-
-
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
@@ -51,5 +43,5 @@ class CalculatorForm(forms.Form):
     barcode = forms.CharField(
         max_length=100,
         label="Barcode",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
     )

@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from django_im_backend.models import UserProfile, MealEntry, RecentSearch
-from .forms import QuickSearch, UserProfileForm, CalculatorForm
+from .forms import UserProfileForm, CalculatorForm
 from .functions import get_product_info, get_current_factor
 
 
@@ -55,7 +55,6 @@ def dashboard(request):
     ]
 
     return HttpResponse(template.render(template_opts, request))
-
 
 
 @login_required

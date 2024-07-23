@@ -6,14 +6,18 @@
         $(document).ready(function () {
             // Funktion zum Aktualisieren beider Inputs
             function updateInputs(value) {
-                let factor = parseFloat($('#id_factor').val());
-                let productCarbs = parseFloat($('#id_product_carbs').val());
-                let result = ((((productCarbs / 100) * value) / 10) * factor);
+                let factor = parseFloat($('#id_factor').val().replace(',', '.'));
+                let productCarbs = parseFloat($('#id_product_carbs').val().replace(',', '.'));
+
+                let carbsQuantity = (productCarbs / 100) * value;
+                let ke = carbsQuantity / 10;
+                let suggestedCE = ke * factor;
+
 
                 $('#id_range').val(value);
                 $('#id_number').val(value);
-                $('#id_carbs_quantity').val((((productCarbs / 100) * value) / 10).toFixed(2));
-                $('#id_suggested_ce').val(result.toFixed(2));
+                $('#id_carbs_quantity').val(ke.toFixed(2));
+                $('#id_suggested_ce').val(suggestedCE.toFixed(2));
             }
 
             // Debounce-Funktion, um die Überprüfung zu verzögern
@@ -106,7 +110,8 @@
                             <input class="form-control" id="id_carbs_quantity" readonly>
                             <label for="id_carbs_quantity">CE / quantity:</label>
                         </div>
-                        <form method="post" class="form-floating col-12 col-sm-8 row-cols-2" action="{% url "set_meal" %}">
+                        <form method="post" class="form-floating col-12 col-sm-8 row-cols-2"
+                              action="{% url "set_meal" %}">
                             {% csrf_token %}
                             <input class="form-control col" name="suggested_ce" id="id_suggested_ce" readonly>
                             <label for="id_suggested_ce">Suggested ICE:</label>
