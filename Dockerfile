@@ -1,6 +1,7 @@
 FROM python:3.12-alpine AS builder
 
-RUN apk add --no-cache libgcc mariadb-connector-c pkgconf mariadb-dev postgresql-dev linux-headers zbar libzbar
+RUN apk add --no-cache libgcc mariadb-connector-c pkgconf mariadb-dev \
+    postgresql-dev linux-headers zbar-dev jpeg-dev zlib-dev musl-dev gcc
 
 WORKDIR /opt/insumate/
 ENV PYTHONDONTWRITEBYTECODE 1
