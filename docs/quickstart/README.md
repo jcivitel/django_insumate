@@ -14,6 +14,8 @@
    - `MARIADB_USER`
    - `MARIADB_PASSWORD`
    - `MARIADB_ROOT_PASSWORD`
+   - `CORS_ALLOWED_ORIGINS`     //Needs to be your domain like `https://insumate.example.com`
+   - `CSRF_TRUSTED_ORIGINS`     //Needs to be your domain like `https://insumate.example.com`
 
    These values are publicly known and must be changed for security reasons.
 
