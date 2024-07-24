@@ -53,11 +53,29 @@
             updateInputs(100);
         });
 
-        function opencam() {
-            const video = document.createElement('video');
+        let scanning = false;
+        let videoStream = null;
+
+        function toggleScan() {
+            if (scanning) {
+                stopScan();
+            } else {
+                startScan();
+            }
+        }
+
+        function startScan() {
+            const video = document.getElementById('scanner-video');
+            const scanButton = document.getElementById('id_scan_btn');
+
+            video.style.display = 'block';
+            scanning = true;
+            scanButton.innerHTML = '<i class="bi-stop-fill"></i>';
+            scanButton.classList.replace('btn-outline-primary', 'btn-outline-danger');
 
             navigator.mediaDevices.getUserMedia({video: {facingMode: "environment"}})
                 .then(function (stream) {
+                    videoStream = stream;
                     video.srcObject = stream;
                     video.setAttribute("playsinline", true);
                     video.play();
@@ -65,46 +83,65 @@
                 })
                 .catch(function (err) {
                     console.log("Kamerazugriff nicht möglich: ", err);
+                    stopScan();
                 });
+        }
 
-            function scan(video) {
-                const currentTime = Date.now();
-                if (currentTime - lastScanTime < 250) {
-                    requestAnimationFrame(() => scan(video));
-                    return;
-                }
+        function stopScan() {
+            const video = document.getElementById('scanner-video');
+            const scanButton = document.getElementById('id_scan_btn');
 
-                lastScanTime = currentTime;
-
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                const image = canvas.toDataURL('image/jpeg');
-
-                fetch('{% url "barcode_scanner" %}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    },
-                    body: 'image=' + encodeURIComponent(image)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.getElementById('id_barcode').value = data.barcode;
-                            video.srcObject.getTracks().forEach(track => track.stop());
-                        } else {
-                            requestAnimationFrame(() => scan(video));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Fehler beim Scannen:', error);
-                        requestAnimationFrame(() => scan(video));
-                    });
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
             }
+
+            video.style.display = 'none';
+            scanning = false;
+            scanButton.innerHTML = '<i class="bi-upc-scan"></i>';
+            scanButton.classList.replace('btn-outline-danger', 'btn-outline-primary');
+        }
+
+        function scan(video) {
+            if (!scanning) return;
+
+            const currentTime = Date.now();
+            if (currentTime - lastScanTime < 250) {
+                requestAnimationFrame(() => scan(video));
+                return;
+            }
+
+            lastScanTime = currentTime;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const image = canvas.toDataURL('image/jpeg');
+
+            fetch('{% url "barcode_scanner" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: 'image=' + encodeURIComponent(image)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('id_barcode').value = data.barcode;
+                        stopScan();
+                    } else if (scanning) {
+                        requestAnimationFrame(() => scan(video));
+                    }
+                })
+                .catch(error => {
+                    console.error('Fehler beim Scannen:', error);
+                    if (scanning) {
+                        requestAnimationFrame(() => scan(video));
+                    }
+                });
         }
     </script>
 {% endblock %}
@@ -124,13 +161,18 @@
                                 {{ calc_form.barcode.label_tag }}
                             </div>
                             <button type="button" class="input-group-button btn btn-outline-primary border-1"
-                                    onclick="opencam()">
+                                    onclick="toggleScan()" id="id_scan_btn">
                                 <i class="bi-upc-scan"></i>
                             </button>
                         </div>
                         <button type="submit" class="mt-2 btn btn-primary float-end">Search</button>
                     </div>
                 </form>
+            </div>
+            <div class="card-footer container-fluid d-flex justify-content-center">
+                <video class="rounded-5 border-black border-2" id="scanner-video"
+                       style="display: none; width: 100%; max-width: 500px;"
+                       playsinline></video>
             </div>
         </div>
     {% else %}
