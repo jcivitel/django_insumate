@@ -7,14 +7,7 @@ WORKDIR /opt/insumate/
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY requirements.txt /opt/insumate/
-COPY manage.py /opt/insumate/
-COPY uwsgi.ini /opt/insumate/
-COPY entry.sh /opt/insumate/
-COPY django_im_api /opt/insumate/django_im_api/
-COPY django_im_backend /opt/insumate/django_im_backend/
-COPY django_im_frontend /opt/insumate/django_im_frontend/
-COPY django_insumate /opt/insumate/django_insumate/
+COPY . /opt/insumate/
 
 FROM builder AS install
 WORKDIR /opt/insumate
