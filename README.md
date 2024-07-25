@@ -42,6 +42,10 @@ This Django-based web application is designed to assist people with diabetes in 
 
 This application aims to simplify the daily task of managing diabetes by providing quick, personalized carbohydrate and insulin calculations, potentially improving glycemic control and quality of life for users.
 
+## User Guide
+
+To simplify many things, use our [User Guide](docs/howto/)
+
 ## Technologies
 
 - Python 3.x

@@ -5,7 +5,7 @@
 
 ## Steps
 
-1. Save the provided `docker-compose.yml` file in your project directory.
+1. Save the provided [docker-compose.yml](docker-compose.yml) and [nginx](nginx.conf) file in your project directory.
 
 2. **Important**: Change the environment variables
    Before proceeding, modify the following environment variables in the `docker-compose.yml` file:
@@ -14,8 +14,15 @@
    - `MARIADB_USER`
    - `MARIADB_PASSWORD`
    - `MARIADB_ROOT_PASSWORD`
-   - `CORS_ALLOWED_ORIGINS`     //Needs to be your domain like `https://insumate.example.com`
-   - `CSRF_TRUSTED_ORIGINS`     //Needs to be your domain like `https://insumate.example.com`
+
+> [!IMPORTANT]
+>
+> if you want to use this installation publicly, you should use `DEBUG=False` and TLS certificates. In order to use certificates, you must choose a domain name.
+>
+> - `CORS_ALLOWED_ORIGINS`     //Needs to be your domain like `https://insumate.example.com`
+> - `CSRF_TRUSTED_ORIGINS`     //Needs to be your domain like `https://insumate.example.com`
+><br><br>
+> Here is a guide on how to create certificates with [Let's Encrypt](https://letsencrypt.org/getting-started).
 
    These values are publicly known and must be changed for security reasons.
 
@@ -23,10 +30,10 @@
 
 4. Run the following command to start the services:
   `docker-compose up -d`
-5. The Insumate application will be available at `http://localhost:8000`.
+5. The Insumate application will be available at `http://<ip-of-your-docker>`.
 
 6. To stop the services, run: `docker-compose down`
 
-## Additional Notes
-- The MariaDB data is persisted in the `./mysql` directory.
-- The Insumate service depends on both MariaDB and Redis services being healthy/started.
+>  [!NOTE]
+> - The MariaDB data is persisted in the `./mysql` directory.
+> - The Insumate service depends on both MariaDB and Redis services being healthy/started.
