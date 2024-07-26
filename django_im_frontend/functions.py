@@ -15,10 +15,13 @@ def get_product_info(barcode):
         if data["status"] == 1:
             product = data["product"]
             carbs = product.get("nutriments", {}).get("carbohydrates_100g")
+            carbs_serving = product.get("nutriments", {}).get("carbohydrates_serving")
             product_info = {
                 "code": product.get("code"),
                 "name": product.get("product_name"),
                 "carbs": carbs,
+                "carbs_serving": carbs_serving,
+                "serving_quantity": product.get("serving_quantity"),
             }
             cache.set(f"product:{barcode}", product_info, 60 * 60 * 24)
             return product_info
