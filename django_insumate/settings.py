@@ -63,9 +63,9 @@ MIDDLEWARE = [
 ]
 
 AUTO_LOGOUT = {
-    'IDLE_TIME': timedelta(minutes=30),
-    'MESSAGE': 'Your session has expired. Please log in again.',
-    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+    "IDLE_TIME": timedelta(hours=1),
+    "MESSAGE": "Your session has expired. Please log in again",
+    "REDIRECT_TO_LOGIN_IMMEDIATELY": True,
 }
 
 ROOT_URLCONF = "django_insumate.urls"
@@ -83,7 +83,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                'django_auto_logout.context_processors.auto_logout_client',
+                "django_auto_logout.context_processors.auto_logout_client",
             ],
         },
     },

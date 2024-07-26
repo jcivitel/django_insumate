@@ -6,6 +6,7 @@ services:
     environment:
       SECRET_KEY: django-insecure-tlic@!^@d_+jmo7=n&^&y1n1*w9i=00b+u$r!lzos%jdkuk&&u
       ALLOWED_HOSTS: '*'
+      DEBUG: True
       MAIN_DATABASE_HOST: insumate_mariadb
       MAIN_DATABASE_NAME: insumate
       MAIN_DATABASE_USER: insumate
