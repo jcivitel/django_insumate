@@ -118,9 +118,12 @@ def calculate(request, barcode=None):
 
     template_opts["time_of_day"] = time_of_day
     template_opts["current_factor"] = current_factor
-    RecentSearch.add_search(
-        request.user, barcode, template_opts["product_info"]["name"]
-    )
+    try:
+        RecentSearch.add_search(
+            request.user, barcode, template_opts["product_info"]["name"]
+        )
+    except:
+        messages.error(request, "Product is not complete in our database 😥")
 
     return HttpResponse(template.render(template_opts, request))
 

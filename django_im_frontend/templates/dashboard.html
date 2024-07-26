@@ -55,7 +55,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-floating">
-                        <input class="form-control" id="id_sum" value="{{ sum }}" readonly>
+                        <input class="form-control" id="id_sum" value="{{ sum|floatformat:"2" }}" readonly>
                         <label for="id_sum">Sum</label>
                     </div>
                 </div>
