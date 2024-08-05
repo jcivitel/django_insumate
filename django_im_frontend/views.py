@@ -18,7 +18,7 @@ from django.views.decorators.http import require_POST
 from pyzbar.pyzbar import decode
 
 from django_im_backend.models import UserProfile, MealEntry, RecentSearch
-from .forms import UserProfileForm, CalculatorForm
+from .forms import UserProfileForm, CalculatorForm, MealEntryForm
 from .functions import get_product_info, get_current_factor
 
 
@@ -208,3 +208,22 @@ def barcode_scanner(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "message": str(e)})
+
+
+@login_required
+def create_meal_entry(request):
+    template = loader.get_template("create_meal_entry.html")
+    template_opts = dict()
+
+    if request.method == "POST":
+        form = MealEntryForm(request.POST)
+        if form.is_valid():
+            meal_entry = form.save(commit=False)
+            meal_entry.user = request.user
+            meal_entry.save()
+            return redirect("dashboard")
+    else:
+        form = MealEntryForm()
+        template_opts["form"] = form
+
+    return HttpResponse(template.render(template_opts, request))

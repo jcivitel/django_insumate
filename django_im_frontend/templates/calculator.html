@@ -166,7 +166,7 @@
                                 <i class="bi-upc-scan"></i>
                             </button>
                         </div>
-                        <button type="submit" class="mt-2 btn btn-primary float-end">Search</button>
+                        <button type="submit" class="mt-2 btn btn-primary float-end"><i class="bi-search-heart"></i> Search</button>
                     </div>
                 </form>
             </div>
@@ -240,7 +240,7 @@
                             {% csrf_token %}
                             <input class="form-control col" name="suggested_ce" id="id_suggested_ce" readonly>
                             <label for="id_suggested_ce">Suggested ICE:</label>
-                            <button type="submit" class="btn btn-primary mt-2 float-end">Put on my Meal-list</button>
+                            <button type="submit" class="btn btn-primary mt-2 float-end"><i class="bi-list-check"></i> Add to Meal-list</button>
                             <input class="hidden" name="barcode" value="{{ product_info.code }}" hidden>
                         </form>
                     </div>

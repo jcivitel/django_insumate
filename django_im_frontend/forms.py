@@ -1,6 +1,6 @@
 from django import forms
 
-from django_im_backend.models import UserProfile
+from django_im_backend.models import UserProfile, MealEntry
 
 
 class UserProfileForm(forms.ModelForm):
@@ -43,5 +43,22 @@ class CalculatorForm(forms.Form):
     barcode = forms.CharField(
         max_length=100,
         label="Barcode",
-        widget=forms.NumberInput(attrs={"class": "form-control"}),
+        widget=forms.NumberInput(attrs={"class": "form-control", "autofocus": ""}),
     )
+
+
+class MealEntryForm(forms.ModelForm):
+    class Meta:
+        model = MealEntry
+        fields = ["KE", "name"]
+        labels = {"KE": "Kohlenhydrateinheiten", "name": "Mahlzeit Name"}
+        widgets = {
+            "KE": forms.NumberInput(
+                attrs={
+                    "step": "0.1",
+                    "class": "form-control col-12 col-md-6",
+                    "autofocus": "",
+                }
+            ),
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+        }

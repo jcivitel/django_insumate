@@ -13,4 +13,5 @@ urlpatterns = [
     path("delete-entry/<int:entry_id>", views.delete_entry, name="delete-entry"),
     path("statistics/", views.statistics_view, name="statistics"),
     path("barcode-scanner/", views.barcode_scanner, name="barcode_scanner"),
+    path("create-meal-entry/", views.create_meal_entry, name="create_meal_entry"),
 ]

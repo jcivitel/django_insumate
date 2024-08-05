@@ -20,7 +20,7 @@ class MealEntry(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     KE = models.FloatField(help_text="Carbohydrate units")
     timestamp = models.DateTimeField(auto_now_add=True)
-    barcode = models.TextField(help_text="Meal barcode")
+    barcode = models.TextField(help_text="Meal barcode", null=True)
     name = models.TextField(help_text="Meal name")
 
     def __str__(self):

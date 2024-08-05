@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="container-fluid card shadow-lg col-12 col-md-6 my-5">
+        <div class="card-header">
+            <h2>Add new MealEntry</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        {{ form.KE }}
+                        <label for="{{ form.KE.auto_id }}">CE</label>
+                    </div>
+                    <div class="form-floating ">
+                        {{ form.name }}
+                        <label for="{{ form.name.auto_id }}">Meal Name</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 float-end"><i class="bi-floppy2-fill"></i> Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
