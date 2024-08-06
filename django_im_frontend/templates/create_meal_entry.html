@@ -7,15 +7,32 @@
         </div>
         <div class="card-body">
             <div class="row">
+                <div class="container-fluid">
+                    <p class="text-warning">Based on your profile the current Factor is:</p>
+                    <div class="row mb-3">
+                        <div class="form-floating col-6">
+                            <input id="id_timeofday" class="form-control" readonly value="{{ time_of_day }}">
+                            <label for="id_timeofday">Factorname:</label>
+                        </div>
+                        <div class="form-floating col-6">
+                            <input id="id_factor" class="form-control" readonly value="{{ current_factor }}">
+                            <label for="id_factor">Factor:</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="form-floating mb-3">
-                        {{ form.KE }}
-                        <label for="{{ form.KE.auto_id }}">CE</label>
-                    </div>
                     <div class="form-floating ">
                         {{ form.name }}
                         <label for="{{ form.name.auto_id }}">Meal Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ form.KE }}
+                        <label for="{{ form.KE.auto_id }}">CE</label>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3 float-end"><i class="bi-floppy2-fill"></i> Save
                     </button>

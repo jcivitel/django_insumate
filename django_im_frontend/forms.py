@@ -29,13 +29,13 @@ class UserProfileForm(forms.ModelForm):
         max_value=500,
     )
     morning_factor = forms.FloatField(
-        label="Morning factor", min_value=0, max_value=5, step_size=0.1
+        label="Morning factor", min_value=0, max_value=5, step_size=0.5
     )
     noon_factor = forms.FloatField(
-        label="Lunch factor", min_value=0, max_value=5, step_size=0.1
+        label="Lunch factor", min_value=0, max_value=5, step_size=0.5
     )
     evening_factor = forms.FloatField(
-        label="Dinner factor", min_value=0, max_value=5, step_size=0.1
+        label="Dinner factor", min_value=0, max_value=5, step_size=0.5
     )
 
 
@@ -56,9 +56,9 @@ class MealEntryForm(forms.ModelForm):
             "KE": forms.NumberInput(
                 attrs={
                     "step": "0.1",
-                    "class": "form-control col-12 col-md-6",
-                    "autofocus": "",
+                    "class": "form-control",
+                    "readonly": "",
                 }
             ),
-            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "name": forms.TextInput(attrs={"class": "form-control mb-3", "autofocus": ""}),
         }
