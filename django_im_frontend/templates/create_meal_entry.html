@@ -1,5 +1,25 @@
 {% extends 'base/base.html' %}
 
+{% block customjs %}
+    <script>
+        $(document).ready(function () {
+            function updateInputs(value) {
+                let factor = parseFloat($('#id_factor').val().replace(',', '.'));
+
+                let suggestedCE = value * factor;
+
+                $('#{{ form.KE.auto_id }}').val(suggestedCE.toFixed(2));
+            }
+
+            // Event-Listener für die Inputs
+            $('#id_estimated_ce').on('input', function () {
+                updateInputs($(this).val());
+            });
+            updateInputs(10);
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid card shadow-lg col-12 col-md-6 my-5">
         <div class="card-header">
@@ -8,15 +28,24 @@
         <div class="card-body">
             <div class="row">
                 <div class="container-fluid">
-                    <p class="text-warning">Based on your profile the current Factor is:</p>
-                    <div class="row mb-3">
+                    <small>
+                        <i class="bi-info-circle-fill me-2"></i>Based on your profile the current Factor is:
+                    </small>
+                    <div class="row mb-3 mt-2">
                         <div class="form-floating col-6">
                             <input id="id_timeofday" class="form-control" readonly value="{{ time_of_day }}">
                             <label for="id_timeofday">Factorname:</label>
                         </div>
-                        <div class="form-floating col-6">
+                        <div class="form-floating col-6 mb-3">
                             <input id="id_factor" class="form-control" readonly value="{{ current_factor }}">
                             <label for="id_factor">Factor:</label>
+                        </div>
+                        <hr>
+                        <small><i class="bi-info-circle-fill me-2"></i>Please enter here your estimated CE for your
+                            Meal:</small>
+                        <div class="form-floating col-6 mt-2">
+                            <input type="number" id="id_estimated_ce" class="form-control" placeholder="10" autofocus>
+                            <label for="id_estimated_ce">Estimated CE:</label>
                         </div>
                     </div>
                 </div>
@@ -26,7 +55,9 @@
             <div class="row">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="form-floating ">
+                    <small><i class="bi-info-circle-fill me-2"></i>The following will then be added to your meal
+                        list:</small>
+                    <div class="form-floating mt-2">
                         {{ form.name }}
                         <label for="{{ form.name.auto_id }}">Meal Name</label>
                     </div>

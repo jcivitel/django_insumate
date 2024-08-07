@@ -10,11 +10,21 @@ class UserProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
-        self.fields["height"].widget.attrs.update({"class": "form-control"})
-        self.fields["weight"].widget.attrs.update({"class": "form-control"})
-        self.fields["morning_factor"].widget.attrs.update({"class": "form-control"})
-        self.fields["noon_factor"].widget.attrs.update({"class": "form-control"})
-        self.fields["evening_factor"].widget.attrs.update({"class": "form-control"})
+        self.fields["height"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "height"}
+        )
+        self.fields["weight"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "weight"}
+        )
+        self.fields["morning_factor"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "morning_factor"}
+        )
+        self.fields["noon_factor"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "noon_factor"}
+        )
+        self.fields["evening_factor"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "evening_factor"}
+        )
 
     height = forms.FloatField(
         label="Size",
@@ -43,7 +53,9 @@ class CalculatorForm(forms.Form):
     barcode = forms.CharField(
         max_length=100,
         label="Barcode",
-        widget=forms.NumberInput(attrs={"class": "form-control", "autofocus": ""}),
+        widget=forms.NumberInput(
+            attrs={"class": "form-control", "autofocus": "", "placeholder": "Barcode"}
+        ),
     )
 
 
@@ -51,7 +63,6 @@ class MealEntryForm(forms.ModelForm):
     class Meta:
         model = MealEntry
         fields = ["KE", "name"]
-        labels = {"KE": "Kohlenhydrateinheiten", "name": "Mahlzeit Name"}
         widgets = {
             "KE": forms.NumberInput(
                 attrs={
@@ -60,5 +71,7 @@ class MealEntryForm(forms.ModelForm):
                     "readonly": "",
                 }
             ),
-            "name": forms.TextInput(attrs={"class": "form-control mb-3", "autofocus": ""}),
+            "name": forms.TextInput(
+                attrs={"class": "form-control mb-3", "placeholder": "Name"}
+            ),
         }
