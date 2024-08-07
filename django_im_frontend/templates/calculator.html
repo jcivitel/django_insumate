@@ -49,8 +49,8 @@
                 debouncedCheckValue();
             });
 
-            // Initialisieren Sie die Inputs mit einem Startwert
-            updateInputs({{ product_info.serving_quantity }});
+            // Initialisieren Sie die Inputs mit einem Startwert und wenn keine serving_quantity existiert, den Wert auf 100 setzten
+            updateInputs({{ product_info.serving_quantity| default_if_none:'100' }});
         });
 
         let scanning = false;
@@ -133,6 +133,7 @@
                     if (data.success) {
                         document.getElementById('id_barcode').value = data.barcode;
                         stopScan();
+                        document.getElementById('btn_submit').click();
                     } else if (scanning) {
                         requestAnimationFrame(() => scan(video));
                     }
@@ -166,7 +167,9 @@
                                 <i class="bi-upc-scan"></i>
                             </button>
                         </div>
-                        <button type="submit" class="mt-2 btn btn-primary float-end"><i class="bi-search-heart"></i> Search</button>
+                        <button id="btn_submit" type="submit" class="mt-2 btn btn-primary float-end"><i class="bi-search-heart"></i>
+                            Search
+                        </button>
                     </div>
                 </form>
             </div>
@@ -209,7 +212,8 @@
                             <input class="form-control" id="id_product_carbs" readonly value="{{ product_info.carbs }}">
                             <label for="id_product_carbs">Product Carbs:</label>
                         </div>
-                        <div class="h6 mt-5"><i class="bi-info-circle-fill"></i> More information about this product</div>
+                        <div class="h6 mt-5"><i class="bi-info-circle-fill"></i> More information about this product
+                        </div>
                         <div class="small text-body-emphasis">
                             <table class="table table-striped">
                                 <thead>
@@ -240,14 +244,16 @@
                             {% csrf_token %}
                             <input class="form-control col" name="suggested_ce" id="id_suggested_ce" readonly>
                             <label for="id_suggested_ce">Suggested ICE:</label>
-                            <button type="submit" class="btn btn-primary mt-2 float-end"><i class="bi-list-check"></i> Add to Meal-list</button>
+                            <button type="submit" class="btn btn-primary mt-2 float-end"><i class="bi-list-check"></i>
+                                Add to Meal-list
+                            </button>
                             <input class="hidden" name="barcode" value="{{ product_info.code }}" hidden>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="card-footer my-3">
-                <small class="text-warning-emphasis">Please note that this information is for guidance only and we
+                <small class="text-warning-emphasis"><i class="bi-info-circle-fill me-2"></i>Please note that this information is for guidance only and we
                     cannot give medical advice.
 
                     Discuss everything else with your diabetologist

@@ -8,6 +8,13 @@
                     <h2>Edit Profile</h2>
                 </div>
                 <div class="card-body">
+                    <div class="ms-3 d-flex">
+                        <small>
+                            <i class="bi-info-circle-fill me-2"></i>
+                            Please fill in all your information so that we can make suggestions and recommendations
+                            perfectly tailored to you.
+                        </small>
+                    </div>
                     <form method="post">
                         {% csrf_token %}
                         {% for field in profile_form %}
@@ -22,7 +29,8 @@
                                 {% endfor %}
                             </div>
                         {% endfor %}
-                        <button type="submit" class="btn btn-primary float-end"><i class="bi-floppy2-fill"></i> Save</button>
+                        <button type="submit" class="btn btn-primary float-end"><i class="bi-floppy2-fill"></i> Save
+                        </button>
                     </form>
                 </div>
             </div>

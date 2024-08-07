@@ -57,8 +57,8 @@ def dashboard(request):
     template_opts["sum"] = recent_entries.aggregate(Sum("KE"))["KE__sum"] or 0
 
     template_opts["recent_searches"] = RecentSearch.objects.filter(user=request.user)[
-                                       :5
-                                       ]
+        :5
+    ]
 
     return HttpResponse(template.render(template_opts, request))
 
@@ -172,10 +172,10 @@ def statistics_view(request):
     ke_data = []
     for start, end in time_intervals:
         sum_ke = (
-                MealEntry.objects.filter(
-                    user=request.user, timestamp__range=(start, end)
-                ).aggregate(Sum("KE"))["KE__sum"]
-                or 0
+            MealEntry.objects.filter(
+                user=request.user, timestamp__range=(start, end)
+            ).aggregate(Sum("KE"))["KE__sum"]
+            or 0
         )
         ke_data.append({"time": start.strftime("%H:%M"), "ke": round(sum_ke, 2)})
     template_opts["chart_data"] = json.dumps(ke_data)
