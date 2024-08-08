@@ -180,6 +180,19 @@ def statistics_view(request):
         ke_data.append({"time": start.strftime("%H:%M"), "ke": round(sum_ke, 2)})
     template_opts["chart_data"] = json.dumps(ke_data)
 
+    entry_list = []
+    for start, end in time_intervals:
+        entries = MealEntry.objects.values_list("timestamp", "KE", "name").filter(
+            user=request.user, timestamp__range=(start, end)
+        )
+        filtered_entries = [item for item in entries if item[2]]
+        if filtered_entries:
+            entry_list.append(
+                {"time": start.strftime("%H:%M"), "entries": filtered_entries}
+            )
+
+    template_opts["entry_list"] = entry_list
+
     return HttpResponse(template.render(template_opts, request))
 
 

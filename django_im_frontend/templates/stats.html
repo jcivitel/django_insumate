@@ -57,4 +57,33 @@
             </small>
         </div>
     </div>
+    {% if entry_list %}
+        <div class="card mt-3 mb-5">
+            <div class="card-header">Your Meals during the day</div>
+            <div class="card-body">
+                <ul class="list-group list-group-horizontal">
+                    {% for item in entry_list %}
+                        <ul class="list-group-item list-group-item-action">
+                            <li class="d-flex justify-content-between">
+                                <h5 class="mb-1">{{ item.time }}</h5>
+                            </li>
+                            <li class="list-group">
+                                {% for entry in item.entries %}
+                                    <ul class="list-group-item list-group-item-action">
+                                        <li class="d-flex justify-content-between">
+                                            <p class="mb-1">{{ entry.2 }}</p>
+                                            <small>{{ entry.1 }} CE</small>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <small>{{ entry.0 }}</small>
+                                        </li>
+                                    </ul>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
