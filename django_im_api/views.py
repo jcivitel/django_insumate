@@ -2,24 +2,44 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from django_im_backend.models import UserProfile
+from django_im_backend.models import UserProfile, MealEntry, RecentSearch
 from django_im_frontend.functions import get_product_info
-from .serializers import UserExportSerializer
+from .serializers import (
+    UserProfileSerializer,
+    MealEntrySerializer,
+    RecentSearchSerializer,
+)
 
 
-class UserExport(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserExportSerializer
+class UserProfileExport(viewsets.ReadOnlyModelViewSet):
+    serializer_class = UserProfileSerializer
 
     def get_queryset(self):
         return UserProfile.objects.filter(user=self.request.user)
 
 
+class MealEntryExport(viewsets.ReadOnlyModelViewSet):
+    serializer_class = MealEntrySerializer
+
+    def get_queryset(self):
+        return MealEntry.objects.filter(user=self.request.user)
+
+
+class RecentSearchExport(viewsets.ReadOnlyModelViewSet):
+    serializer_class = RecentSearchSerializer
+
+    def get_queryset(self):
+        return RecentSearch.objects.filter(user=self.request.user)
+
+
 class ProductInfoViewSet(viewsets.ViewSet):
     def list(self, request):
+        full_url = request.build_absolute_uri(request.path)
+        example_url = f"{full_url}4008400221823"
         return Response(
             {
                 "help": "you need to append the product id",
-                "example": f"{request.path}/4008400221823",
+                "example": example_url,
             }
         )
 

@@ -23,7 +23,7 @@ def get_product_info(barcode):
                 "carbs_serving": carbs_serving,
                 "serving_quantity": product.get("serving_quantity"),
             }
-            cache.set(f"product:{barcode}", product_info, 60 * 60 * 24)
+            cache.set(f"product:{barcode}", product_info, 60 * 60 * 24 * 7)
             return product_info
     return None
 
