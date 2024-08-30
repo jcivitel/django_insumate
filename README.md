@@ -8,6 +8,8 @@
 
 # InsuMate
 
+<img src="docs/repo/banner.jpg" alt="repo banner" width="500">
+
 ## Project Purpose
 
 This Django-based web application is designed to assist people with diabetes in managing their carbohydrate intake and insulin dosages. The primary goals of the project are:
