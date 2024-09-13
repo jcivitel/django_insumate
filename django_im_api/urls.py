@@ -6,7 +6,7 @@ from .views import (
     UserProfileExport,
     MealEntryExport,
     RecentSearchExport,
-    StatusAPIView
+    StatusAPIView,
 )
 
 router = DefaultRouter()
