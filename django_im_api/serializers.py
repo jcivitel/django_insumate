@@ -7,7 +7,7 @@ from django_im_backend.models import UserProfile, MealEntry, RecentSearch
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "email"]
+        fields = ["id", "username", "email", "date_joined"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
