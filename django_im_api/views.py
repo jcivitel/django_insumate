@@ -5,7 +5,11 @@ from rest_framework.views import APIView
 
 from django_im_backend.models import UserProfile, MealEntry, RecentSearch
 from django_im_frontend.functions import get_product_info
-from .functions import check_mysql_connection, check_redis_connection, check_openfood_connection
+from .functions import (
+    check_mysql_connection,
+    check_redis_connection,
+    check_openfood_connection,
+)
 from .serializers import (
     UserProfileSerializer,
     MealEntrySerializer,

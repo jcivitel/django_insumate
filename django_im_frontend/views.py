@@ -16,9 +16,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from pyzbar.pyzbar import decode
+from django.contrib.auth.decorators import user_passes_test
 
+from django_im_api.functions import check_openfood_connection
 from django_im_backend.models import UserProfile, MealEntry, RecentSearch
-from .forms import UserProfileForm, CalculatorForm, MealEntryForm
+from .decorators import check_registration_enabled, not_logged_in
+from .forms import UserProfileForm, CalculatorForm, MealEntryForm, RegisterForm
 from .functions import get_product_info, get_current_factor
 
 
@@ -41,6 +44,21 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out 🫡")
     return redirect("login")
+
+
+@user_passes_test(not_logged_in, login_url="dashboard")
+@check_registration_enabled
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("dashboard")
+    else:
+        form = RegisterForm()
+
+    return render(request, "register.html", {"form": form})
 
 
 @login_required
