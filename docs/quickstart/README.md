@@ -14,6 +14,7 @@
    - `MARIADB_USER`
    - `MARIADB_PASSWORD`
    - `MARIADB_ROOT_PASSWORD`
+   - `REGISTRATION_ENABLED`        -> by default is this set to `True`, but if you don't want any user to register set this to `False`
 
 > [!IMPORTANT]
 >
