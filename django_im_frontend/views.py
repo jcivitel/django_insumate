@@ -7,6 +7,7 @@ from PIL import Image
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
@@ -16,7 +17,6 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from pyzbar.pyzbar import decode
-from django.contrib.auth.decorators import user_passes_test
 
 from django_im_api.functions import check_openfood_connection
 from django_im_backend.models import UserProfile, MealEntry, RecentSearch
@@ -217,7 +217,6 @@ def statistics_view(request):
 @require_POST
 def barcode_scanner(request):
     try:
-        # Empfange das Bild vom Frontend
         image_data = request.POST.get("image")
         if not image_data:
             return JsonResponse({"success": False, "message": "Kein Bild empfangen"})
@@ -225,10 +224,8 @@ def barcode_scanner(request):
         image_data = image_data.split(",")[1]
         image_data = base64.b64decode(image_data)
 
-        # Konvertiere die Daten in ein Bild
         image = Image.open(io.BytesIO(image_data))
 
-        # Dekodiere den Barcode
         decoded_objects = decode(image)
 
         if decoded_objects:

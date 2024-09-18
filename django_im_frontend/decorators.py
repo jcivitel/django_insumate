@@ -1,9 +1,7 @@
-from cgi import nolog
 from functools import wraps
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 
