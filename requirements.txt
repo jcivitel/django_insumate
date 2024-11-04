@@ -5,7 +5,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 django==5.1.2
 django-auto-logout==0.5.1
-django-cors-headers==4.5.0
+django-cors-headers==4.6.0
 django-redis==5.4.0
 django-user-sessions==2.0.0
 django-xforwardedfor-middleware==2.0
@@ -23,5 +23,5 @@ redis==5.0.8
 requests==2.32.3
 sqlparse==0.5.1
 urllib3==2.2.3
-whitenoise==6.8.1
 uwsgi==2.0.28 ; sys_platform == "linux"
+whitenoise==6.8.1
