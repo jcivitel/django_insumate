@@ -3,7 +3,7 @@ black==24.10.0
 certifi==2024.8.30
 charset-normalizer==3.3.2
 click==8.1.7
-django==5.1.2
+django==5.1.3
 django-auto-logout==0.5.1
 django-cors-headers==4.6.0
 django-redis==5.4.0
