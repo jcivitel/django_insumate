@@ -1,5 +1,6 @@
 [![](https://img.shields.io/maintenance/yes/2024)](https://github.com/jcivitel/)
 [![Static Badge](https://img.shields.io/badge/GitHub-jcivitell-green?logo=github)](https://github.com/jcivitel/django_insumate)
+[![Dependabot Updates](https://github.com/jcivitel/django_insumate/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/jcivitel/django_insumate/actions/workflows/dependabot/dependabot-updates)
 [![GitHub Repo stars](https://img.shields.io/github/stars/jcivitel/django_insumate)](https://github.com/jcivitel/django_insumate)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jcivitell/insumate?logo=docker)](https://hub.docker.com/r/jcivitell/insumate)
 [![Docker Stars](https://img.shields.io/docker/stars/jcivitell/insumate?logo=docker)](https://hub.docker.com/r/jcivitell/insumate)
