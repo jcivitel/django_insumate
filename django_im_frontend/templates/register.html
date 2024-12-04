@@ -1,6 +1,11 @@
 {% extends "base/base_min.html" %}
 {% load static %}
 {% block content %}
+    <div class="position-absolute m-3">
+        <a href="{% url "login" %}" class="btn btn-outline-warning">
+            <i class="bi bi-arrow-left"></i> back to login
+        </a>
+    </div>
     <div class="container">
         <div class="d-flex align-items-center justify-content-center my-5">
             <div class="container col-12 col-sm-5">
@@ -12,6 +17,7 @@
                         <form method="POST">
                             {% csrf_token %}
                             {{ form }}
+                            <br>
                             <button type="submit" class="form-control btn btn-primary">Register</button>
                         </form>
                     </div>

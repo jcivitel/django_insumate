@@ -6,7 +6,7 @@
             <div class="container col-12 col-sm-5">
                 <h1 class="text-center">Welcome to InsuMate</h1>
                 <div class="mt-4 mb-4 col-12 col-sm-8 container-fluid">
-                    <img src="{% static 'img/banner.jpg' %}" class="img-thumbnail rounded-5">
+                    <img src="{% static 'img/banner.jpg' %}" class="img-thumbnail rounded-5" alt="banner">
                 </div>
                 <div class="card shadow-lg bg-dark mt-2">
                     <div class="card-body">
@@ -22,17 +22,17 @@
                                        placeholder="Password">
                                 <label for="id_password">Password</label>
                             </div>
-                            <button class="form-control btn btn-light btn-outline-success mt-2 mb-2" type="submit">Login
+                            <button class="form-control btn btn-success btn-outline-light mt-2 mb-2" type="submit">Login
                             </button>
                         </form>
-                    </div>
-                    <div>
-                        <small class="text-warning-emphasis">No login? Use this register form<br></small>
-                        <a class="btn-sm btn btn-secondary" href="{% url "register" %}">Register now</a>
+                        <hr>
+                        <div class="align-items-end justify-content-end float-end opacity-75">
+                            <small class="text-warning">No login? Use this register form<br></small>
+                            <a class="btn-sm btn btn-outline-warning float-end" href="{% url "register" %}">Register now</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 {% endblock %}
