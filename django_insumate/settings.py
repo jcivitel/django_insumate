@@ -32,6 +32,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
+    "watchman",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
