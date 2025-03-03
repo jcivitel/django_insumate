@@ -22,7 +22,7 @@ python-decouple==3.8
 pyzbar==0.1.9
 redis==5.0.8
 requests==2.32.3
-sqlparse==0.5.1
+sqlparse==0.5.3
 urllib3==2.2.3
 uwsgi==2.0.28 ; sys_platform == "linux"
 whitenoise==6.9.0
