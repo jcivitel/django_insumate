@@ -20,7 +20,7 @@ pillow==11.1.0
 platformdirs==4.3.6
 python-decouple==3.8
 pyzbar==0.1.9
-redis==5.0.8
+redis==5.2.1
 requests==2.32.3
 sqlparse==0.5.1
 urllib3==2.2.3
