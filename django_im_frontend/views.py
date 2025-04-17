@@ -3,6 +3,7 @@ import io
 import json
 from datetime import timedelta, datetime
 
+import sentry_sdk
 from PIL import Image
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -33,7 +34,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, f"WELCOME {user}❤️")
-            return redirect("dashboard")
+            return redirect("insu_dashboard")
         else:
             messages.error(request, "Invalid username or password")
     return render(request, "login.html")
@@ -46,7 +47,7 @@ def logout_view(request):
     return redirect("login")
 
 
-@user_passes_test(not_logged_in, login_url="dashboard")
+@user_passes_test(not_logged_in, login_url="insu_dashboard")
 @check_registration_enabled
 def register(request):
     if request.method == "POST":
@@ -54,7 +55,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("dashboard")
+            return redirect("insu_dashboard")
     else:
         form = RegisterForm()
 
@@ -122,6 +123,7 @@ def calculate(request, barcode=None):
                     f"/calculator/{calc_form.cleaned_data["barcode"]}"
                 )
             else:
+                sentry_sdk.capture_message(f"Invalid barcode: {calc_form.cleaned_data['barcode']}")
                 messages.error(request, "Invalid barcode 😯")
                 return HttpResponseRedirect(reverse("calculator"))
 
@@ -156,14 +158,14 @@ def set_meal(request):
             name=get_product_info(request.POST["barcode"])["name"],
         )
         messages.success(request, "Your meal has been set😉")
-    return HttpResponseRedirect(reverse("dashboard"))
+    return HttpResponseRedirect(reverse("insu_dashboard"))
 
 
 @login_required
 def delete_entry(request, entry_id):
     MealEntry.objects.get(id=entry_id).delete()
     messages.success(request, "Your entry has been deleted😌")
-    return HttpResponseRedirect(reverse("dashboard"))
+    return HttpResponseRedirect(reverse("insu_dashboard"))
 
 
 @login_required
@@ -249,7 +251,7 @@ def create_meal_entry(request):
             meal_entry = form.save(commit=False)
             meal_entry.user = request.user
             meal_entry.save()
-            return redirect("dashboard")
+            return redirect("insu_dashboard")
     else:
         form = MealEntryForm()
         template_opts["form"] = form

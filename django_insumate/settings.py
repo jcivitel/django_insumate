@@ -1,6 +1,7 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+import sentry_sdk
 
 from decouple import Csv
 from decouple import config
@@ -182,3 +183,11 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 
 REGISTRATION_ENABLED = config("REGISTRATION_ENABLED", default=True, cast=bool)
+
+# Sentry Settings
+sentry_sdk.init(
+    dsn=config("SENTRY_DSN",default="https://sentry.io"),
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
