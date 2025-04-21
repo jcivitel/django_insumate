@@ -15,7 +15,7 @@ djangorestframework==3.16.0
 idna==3.10
 mypy-extensions==1.0.0
 mysqlclient==2.2.7
-packaging==24.2
+packaging==25.0
 pathspec==0.12.1
 pillow==11.2.1
 platformdirs==4.3.7
