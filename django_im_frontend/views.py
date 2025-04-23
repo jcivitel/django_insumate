@@ -19,7 +19,6 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from pyzbar.pyzbar import decode
 
-from django_im_api.functions import check_openfood_connection
 from django_im_backend.models import UserProfile, MealEntry, RecentSearch
 from .decorators import check_registration_enabled, not_logged_in
 from .forms import UserProfileForm, CalculatorForm, MealEntryForm, RegisterForm
@@ -64,6 +63,11 @@ def register(request):
 
 @login_required
 def dashboard(request):
+    try:
+        UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        return redirect("tutorial")
+
     template = loader.get_template("dashboard.html")
     template_opts = dict()
     thirty_minutes_ago = timezone.now() - timedelta(minutes=30)
@@ -89,6 +93,8 @@ def edit_profile(request):
     try:
         profile = request.user.userprofile
     except UserProfile.DoesNotExist:
+        if not request.method == "POST":
+            messages.success(request, "Please update your profile first 😊")
         profile = UserProfile(user=request.user)
 
     if request.method == "POST":
@@ -96,9 +102,10 @@ def edit_profile(request):
         if profile_form.is_valid():
             profile = profile_form.save(commit=False)
             profile.user = request.user
+            profile.tutorial_completed = True
             profile.save()
             messages.success(request, "Your profile has been updated 😎")
-            template_opts["profile_form"] = profile_form
+            return HttpResponseRedirect(reverse("insu_dashboard"))
     else:
         profile_form = UserProfileForm(instance=profile)
         template_opts["profile_form"] = profile_form
@@ -123,7 +130,9 @@ def calculate(request, barcode=None):
                     f"/calculator/{calc_form.cleaned_data["barcode"]}"
                 )
             else:
-                sentry_sdk.capture_message(f"Invalid barcode: {calc_form.cleaned_data['barcode']}")
+                sentry_sdk.capture_message(
+                    f"Invalid barcode: {calc_form.cleaned_data['barcode']}"
+                )
                 messages.error(request, "Invalid barcode 😯")
                 return HttpResponseRedirect(reverse("calculator"))
 
@@ -266,5 +275,58 @@ def create_meal_entry(request):
 
         template_opts["time_of_day"] = time_of_day
         template_opts["current_factor"] = current_factor
+
+    return HttpResponse(template.render(template_opts, request))
+
+
+@login_required
+def tutorial(request):
+    if request.method == "POST":
+        messages.success(request, "Tutorial completed 😊")
+        return HttpResponseRedirect(reverse("profile"))
+
+    template = loader.get_template("tutorial.html")
+    template_opts = dict()
+    recent_entries = [
+        {
+            "KE": 7.0,
+            "name": "Nutella",
+            "timestamp": datetime.now() - timedelta(minutes=5),
+            "id": "0",
+        },
+        {
+            "KE": 4.5,
+            "name": "Energy Drink",
+            "timestamp": datetime.now() - timedelta(minutes=10),
+            "id": "0",
+        },
+        {
+            "KE": 13,
+            "name": "Pizza",
+            "timestamp": datetime.now() - timedelta(minutes=30),
+            "id": "0",
+        },
+    ]
+
+    template_opts["recent_entries"] = recent_entries
+    template_opts["sum"] = 24.5
+
+    template_opts["recent_searches"] = [
+        {
+            "name": "Nutella",
+            "barcode": "1234567890123",
+            "timestamp": datetime.now() - timedelta(minutes=5),
+        },
+        {
+            "name": "Energy Drink",
+            "barcode": "1234567890123",
+            "timestamp": datetime.now() - timedelta(minutes=10),
+        },
+        {
+            "name": "Pizza",
+            "barcode": "1234567890123",
+            "timestamp": datetime.now() - timedelta(minutes=30),
+        },
+    ]
 
     return HttpResponse(template.render(template_opts, request))

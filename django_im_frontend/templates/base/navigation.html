@@ -6,16 +6,16 @@
         <a class="navbar-brand" href="{% url "insu_dashboard" %}"> InsuMate </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li id="nav_dashboard" class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url "insu_dashboard" %}">Dashboard</a>
                 </li>
-                <li class="nav-item">
+                <li id="nav_stats" class="nav-item">
                     <a class="nav-link" href="{% url "statistics" %}">Stats</a>
                 </li>
-                <li class="nav-item">
+                <li id="nav_calculator" class="nav-item">
                     <a class="nav-link" href="{% url "calculator" %}">Calculator</a>
                 </li>
-                <li class=" nav-item">
+                <li id="nav_profile" class=" nav-item">
                     <a class="nav-link" href="{% url "profile" %}">Profile</a>
                 </li>
             </ul>

@@ -1,0 +1,79 @@
+{% extends "dashboard.html" %}
+{% load static %}
+{% block custom_headers %}
+    <link rel="stylesheet" href="{% static 'introjs/intro.min.css' %}">
+    <link rel="stylesheet" href="{% static 'introjs/introjs-modern.css' %}">
+    <script src="{% static 'introjs/intro.min.js' %}"></script>
+{% endblock %}
+
+{% block customjs %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tour = introJs();
+
+            tour.setOptions({
+                steps: [
+                    {
+                        title: 'Welcome to InsuMate',
+                        intro: 'Welcome to InsuMate. This is your personal diabetes assistant. I will show you how to use the app. <br><br><div class="text-warning"> You' +
+                            ' can skip this tutorial at any time by clicking on the "X" button or pressing the "ESC" key.</div>',
+                    },
+                    {
+                        title: 'Your Statistics',
+                        element: '#nav_stats',
+                        intro: 'Here you can see your statistics of the day. You can also see your average values.',
+                    },
+                    {
+                        title: 'The Calculator',
+                        element: '#nav_calculator',
+                        intro: 'On this page you can search for food items. You can enter the barcode manually or scan it with your cam.',
+                    },
+                    {
+                        title: 'Your Profile',
+                        element: '#nav_profile',
+                        intro: 'Your profile page. Here you can change your personal insulin factors. Based on this values, the app calculates your insulin needs.',
+                    },
+                    {
+                        title: 'Last Searches',
+                        element: '#div_last_searches',
+                        intro: 'Here you can see your last searches...'
+                    },
+                    {
+                        title: 'Last Meals',
+                        element: '#div_last_meals',
+                        intro: 'This is your meal list. You can add custom meals here, if you could not find them in the search.',
+                    },
+                ],
+                exitOnOverlayClick: false,
+                showProgress: true,
+                showBullets: false,
+                buttonClass: 'btn btn-primary',
+                doneLabel: 'Done'
+            });
+
+            tour.oncomplete(function () {
+                fetch('{% url "tutorial" %}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(() => {
+                    window.location.replace("{% url "profile" %}");
+                });
+            });
+
+            tour.onexit(function () {
+                fetch('{% url "tutorial" %}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(() => {
+                    window.location.replace("{% url "profile" %}");
+                });
+            })
+
+            tour.start();
+        });
+    </script>
+{% endblock %}

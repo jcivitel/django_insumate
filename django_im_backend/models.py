@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    tutorial_completed = models.BooleanField(default=False)
     height = models.FloatField(help_text="Height in centimeters")
     weight = models.FloatField(help_text="Weight in kilograms")
     morning_factor = models.FloatField()
