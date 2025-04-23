@@ -15,5 +15,5 @@ urlpatterns = [
     path("statistics/", views.statistics_view, name="statistics"),
     path("barcode-scanner/", views.barcode_scanner, name="barcode_scanner"),
     path("create-meal-entry/", views.create_meal_entry, name="create_meal_entry"),
-    path("turotial/", views.tutorial, name="tutorial"),
+    path("tutorial/", views.tutorial, name="tutorial"),
 ]
