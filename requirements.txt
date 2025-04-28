@@ -23,7 +23,7 @@ python-decouple==3.8
 pyzbar==0.1.9
 redis==5.2.1
 requests==2.32.3
-sentry-sdk==2.26.1
+sentry-sdk==2.27.0
 sqlparse==0.5.3
 tzdata==2025.2
 urllib3==2.4.0
