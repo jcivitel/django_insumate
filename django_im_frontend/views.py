@@ -246,7 +246,8 @@ def barcode_scanner(request):
             return JsonResponse({"success": False, "message": "Kein Barcode gefunden"})
 
     except Exception as e:
-        return JsonResponse({"success": False, "message": str(e)})
+        sentry_sdk.capture_exception(e)  # Log the exception for debugging
+        return JsonResponse({"success": False, "message": "An internal error occurred."})
 
 
 @login_required
