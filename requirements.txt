@@ -21,7 +21,7 @@ pillow==11.3.0
 platformdirs==4.3.8
 python-decouple==3.8
 pyzbar==0.1.9
-redis==6.2.0
+redis==6.4.0
 requests==2.32.4
 sentry-sdk==2.34.1
 sqlparse==0.5.3
