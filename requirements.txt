@@ -27,5 +27,5 @@ sentry-sdk==2.40.0
 sqlparse==0.5.3
 tzdata==2025.2
 urllib3==2.5.0
-uwsgi==2.0.30
+uwsgi==2.0.31
 whitenoise==6.11.0
