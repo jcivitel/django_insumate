@@ -1,5 +1,16 @@
 name: Dependabot auto-merge
-on: pull_request
+on: 
+  pull_request:
+    types:
+      - opened
+      - edited
+      - labeled
+      - unlabeled
+  issue_comment:
+    types:
+      - created
+      - edited
+      - deleted
 
 permissions:
   contents: write
