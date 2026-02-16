@@ -18,7 +18,7 @@ mysqlclient==2.2.8
 packaging==26.0
 pathspec==1.0.4
 pillow==12.1.1
-platformdirs==4.5.1
+platformdirs==4.9.2
 python-decouple==3.8
 pyzbar==0.1.9
 redis==7.2.0
