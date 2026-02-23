@@ -9,7 +9,7 @@ django-auto-logout==0.5.1
 django-cors-headers==4.9.0
 django-redis==6.0.0
 django-user-sessions==2.0.0
-django-watchman==1.3.0
+django-watchman==1.4.0
 django-xforwardedfor-middleware==2.0
 djangorestframework==3.16.1
 idna==3.11
