@@ -28,4 +28,4 @@ sqlparse==0.5.5
 tzdata==2025.3
 urllib3==2.6.3
 uwsgi==2.0.31
-whitenoise==6.11.0
+whitenoise==6.12.0
