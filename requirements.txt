@@ -16,7 +16,7 @@ idna==3.11
 mypy-extensions==1.1.0
 mysqlclient==2.2.8
 packaging==26.1
-pathspec==1.0.4
+pathspec==1.1.1
 pillow==12.2.0
 platformdirs==4.9.6
 python-decouple==3.8
