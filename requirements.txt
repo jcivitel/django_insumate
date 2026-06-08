@@ -4,7 +4,7 @@ certifi==2026.5.20
 charset-normalizer==3.4.7
 click==8.4.1
 colorama==0.4.6
-Django==6.0.5
+Django==6.0.6
 django-auto-logout==0.5.1
 django-cors-headers==4.9.0
 django-redis==7.0.0
