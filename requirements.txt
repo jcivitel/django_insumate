@@ -25,7 +25,7 @@ redis==8.0.1
 requests==2.34.2
 sentry-sdk==2.65.0
 sqlparse==0.5.5
-tzdata==2026.2
+tzdata==2026.3
 urllib3==2.7.0
 uwsgi==2.0.31
 whitenoise==6.12.0
