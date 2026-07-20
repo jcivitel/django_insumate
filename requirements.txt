@@ -1,4 +1,4 @@
-asgiref==3.11.1
+asgiref==3.12.1
 black==26.5.1
 certifi==2026.6.17
 charset-normalizer==3.4.9
