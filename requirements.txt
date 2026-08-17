@@ -24,7 +24,7 @@ pyzbar==0.1.9
 redis==8.1.0
 requests==2.34.2
 sentry-sdk==2.68.0
-sqlparse==0.5.5
+sqlparse==0.6.0
 tzdata==2026.3
 urllib3==2.7.0
 uwsgi==2.0.31
