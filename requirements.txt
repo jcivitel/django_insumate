@@ -1,7 +1,7 @@
 asgiref==3.12.1
 black==26.5.1
 certifi==2026.7.22
-charset-normalizer==3.4.9
+charset-normalizer==3.5.0
 click==8.4.2
 colorama==0.4.6
 Django==6.1
@@ -18,13 +18,13 @@ mysqlclient==2.2.8
 packaging==26.3
 pathspec==1.1.1
 pillow==12.3.0
-platformdirs==4.11.0
+platformdirs==4.11.3
 python-decouple==3.8
 pyzbar==0.1.9
 redis==8.1.0
 requests==2.34.2
-sentry-sdk==2.66.1
-sqlparse==0.5.5
+sentry-sdk==2.68.0
+sqlparse==0.6.0
 tzdata==2026.3
 urllib3==2.7.0
 uwsgi==2.0.31
