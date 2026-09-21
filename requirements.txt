@@ -14,7 +14,7 @@ django-xforwardedfor-middleware==2.0
 djangorestframework==3.18.1
 idna==3.20
 mypy-extensions==1.1.0
-mysqlclient==2.2.8
+mysqlclient==2.3.0
 packaging==26.3
 pathspec==1.1.1
 pillow==12.3.0
